@@ -1,0 +1,6 @@
+{
+  "name": "Satin-chatbot",
+  "tagline": "chatbot of future.",
+  "body": "# Satin-chatbot ### chatbot of future\r\nSatin is a chatbot which can do normal talk as well as give answer of question you asked. It can analyze the knowledge given in a text and link with it's previous knowledge to find about facts and understand it. When it can't get the answer of your question based on it's knowledge and understanding, it will search web to find out about your question and try to give a satifying answer.",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
