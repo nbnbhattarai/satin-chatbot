@@ -1,0 +1,43 @@
+#+TITLE: TODO FOR PROJECT SATIN-CHATBOT
+#+AUTHOR: Nabin Bhattarai
+#+DATE: 2016-07-17 sat.
+
+* Projce Satin-Chatbot ToDo
+** TODO Package tokenizer
+   SCHEDULED: <2016-07-22 Fri>
+It split words and sentences.
+Read about tokenization here [[http://nlp.stanford.edu/IR-book/html/htmledition/tokenization-1.html][tokenization stanford]]
+*** TODO implement word_tokenize
+*** TODO implement sent_tokenize
+** TODO Package lemmatizer
+   SCHEDULED: <2016-07-25 Mon>
+Lemmatize obtained word/symbol from tokenization.
+*** TODO implement lemmatize function
+** TODO Package word_rep
+   SCHEDULED: <2016-07-29 Fri>
+Package to get vector representation of word.
+Uses Neural Network to get similar representation 
+to similar objects.
+*** TODO word_vector
+Return vector of n-dimension of given word
+** TODO Package speller
+   SCHEDULED: <2016-08-03 Wed>
+Check the spelling of word and if wrong return list
+of words with most probable word first
+*** TODO implement spellcheck function
+Check the spelling of word.
+if corrent return True
+else return False
+*** TODO implement spellcorrect function
+Return list of words nearest to given word for
+spell correction.
+** TODO Package languagemodel
+   SCHEDULED: <2016-08-10 Wed>
+Language Model will be implemented at last.
+We are going to use Neural Network to design 
+the language
+** TODO satin
+   SCHEDULED: <2016-08-15 Mon>
+main program which uses all package, receive user input
+tokenize input, use language model and knowledge 
+representation to get reply and prints the output to user.
