@@ -18,9 +18,33 @@ back when these symbol are present because computer program are very fast
  compared to trained AI for mathematical operations.
 """
 
+en_punc = {'.': '_FULLSTOP_',
+           ',': '_COMMA_',
+           '?': '_QUESTIONMARK_',
+           '!': '_EXCLAMATIONMARK_',
+           }
+math_sym = {'+': '_PLUS_',
+            '-': '_MINUS_',
+            '*': '_MULTIPLICATION_',
+            '/': '_DIVISION_',
+            '%': '_MODULUS_',
+            }
 
-def lemmatize(word):
+def lemmatize_list(tokenlist):
     """
-    Lemmatize the given word and return lemmatized word.
+    Lemmatize all token of tokenlist and return list containing 
+    lemmatized tokens.
     """
+    for token in tokenlist:
+        
+
+def lemmatize_word (word):
+    """
+    Lemmatize the given token and return lemmatized token.
+    """
+    if word in en_punc.keys():
+        word = en_punc[word]
+    elif word in math_sym.keys():
+        word = math_sym[word]
     
+    return word

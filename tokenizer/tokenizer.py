@@ -4,10 +4,13 @@ Descripton :
 """
 import re
 
-# punctions of english languagexs
-punctions = ['.','?',',', '&', '!',':',]
+# punctuation of english languagexs
+punctions = ['.', '?', ',', '&', '!', ':', ]
 
-abbreviations = ['Mr.', 'Mrs.', 'Dr.', 'Er.',]
+abbreviations = ['Mr.', 'Mrs.', 'Dr.', 'Er.', ]
+
+START_TOKEN = '_START_TOKEN_'
+END_TOKEN = '_END_TOKEN_'
 
 
 def extract_num(r):
@@ -30,7 +33,7 @@ def _extract_abbreviations(r):
     It takes a string input and returns a list of string
     seperating the abbreviations in the given string r
     """
-    reg_abb = ''.join([re.escape(x) for x in abbreviations)
+    reg_abb = ''.join([re.escape(x) for x in abbreviations])
     return [r]
 
 
@@ -39,13 +42,16 @@ def word_tokenize(text):
     tokenize a given text of english.
     Seperate text with meaningful words
     """
-    split_word = text.split()
+    text = text.lower()
+    splitted_word = text.split()
+    tokenized_word = [START_TOKEN]
+    tokenized_word.append([x for x in splitted_word])
+    tokenized_word.append([END_TOKEN])
+
     reex = []
     reex.append('('.join([re.escape(k) for k in abbreviations])+')')
-    print('reex :', reex)
-    text = text.lower()
     
-    return split_word
+    return tokenized_word
 
 
 def sent_tokenize(text):
