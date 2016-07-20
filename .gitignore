@@ -65,3 +65,6 @@ target/
 *~
 *#*
 *#*#
+
+# for testing files, testfile contains _test.extension in their filename
+*_test.*
