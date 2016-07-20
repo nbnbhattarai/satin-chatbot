@@ -1,5 +1,6 @@
-#!/usr/bin/python
+ #!/usr/bin/python
 import tokenizer
+
 
 def prompt():
     """
@@ -13,7 +14,7 @@ def prompt():
 def talker(args_in):
     """
     It takes input text given by user and returns the reply
-    to user. 
+    to user.
     """
     return 'hello'
 
@@ -24,6 +25,6 @@ def satin():
         args_out = talker(args_in)
         print('satin :> '+args_out)
 
- 
+
 if __name__ == '__main__':
     satin()
