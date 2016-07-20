@@ -37,7 +37,7 @@ class Tokenizer:
         abbreviations = list(self.abbreviations.keys())
         regex = '|'.join([re.escape(x.lower()) for x in abbreviations])
         regex += '|[a-z]+|'
-        regex += '[+-]?(?:[0-9]+\.)+[0-9]+|'
+        regex += '[+-]?[0-9]+|'
         regex += '|'.join([re.escape(x) for x in symbols])
         print('regex: ', regex)
         result = [START_TOKEN]
