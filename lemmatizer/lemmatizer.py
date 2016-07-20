@@ -30,15 +30,8 @@ math_sym = {'+': '_PLUS_',
             '%': '_MODULUS_',
             }
 
-def lemmatize_list(tokenlist):
-    """
-    Lemmatize all token of tokenlist and return list containing 
-    lemmatized tokens.
-    """
-    for token in tokenlist:
-        
 
-def lemmatize_word (word):
+def lemmatize_word(word):
     """
     Lemmatize the given token and return lemmatized token.
     """
@@ -48,3 +41,15 @@ def lemmatize_word (word):
         word = math_sym[word]
     
     return word
+
+
+def lemmatize_list(tokenlist):
+    """
+    Lemmatize all token of tokenlist and return list containing 
+    lemmatized tokens.
+    """
+    res = []
+    for token in tokenlist:
+        print(lemmatize_word(token))
+        res.append(lemmatize_word(token))
+    return res
