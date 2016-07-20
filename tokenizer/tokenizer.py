@@ -4,60 +4,50 @@ Descripton :
 """
 import re
 
-# punctuation of english languagexs
-punctions = ['.', '?', ',', '&', '!', ':', ]
+# abbreviations are stored in this file
+# when It learns new abbreviations, It insert
+# into this file.
+abbreviations_filename = "data/language/en/abbreviations"
 
-abbreviations = ['Mr.', 'Mrs.', 'Dr.', 'Er.', ]
+# symbols of english languagexs
+symbols = ['.', '?', ',', '&', '!', ':', '$', '%', '#', '@', '~',
+               '-', '+', '=', '*', '(', ')', '^', '/','\\', '|', ';',
+               '\'', '\"' ]
 
+# Every sentences starts from START_TOKEN
+# and ends with END_TOKEN
 START_TOKEN = '_START_TOKEN_'
 END_TOKEN = '_END_TOKEN_'
 
+class Tokenizer:
+    def __init__(self):
+        abbreviations_file = open(abbreviations_filename, 'r')
+        lines = abbreviations_file.readlines()
+        self.abbreviations = {}
+        for line in lines:
+            if len(line) > 0 and line.count('-') == 1:
+                [abb, full] = line.split('-')
+                self.abbreviations[abb] = full
 
-def extract_num(r):
-    """
-    It extracts the number from string r.
-    It takes a string containing number and returns
-    a list seperating number from string.
-    """
-    reg_num = '[0-9]+(.[0-9]+)*'
-    reg_obj = re.search(reg_num, r)
-    if not reg_obj:
-        return r
-    res_list = [r[:reg_obj.span(0)[0]], r[reg_obj.span(0)[0]:
-                reg_obj.span(0)[1]], r[reg_obj.span(0)[1]:]]
-    return res_list
+    def word_tokenize(self, str):
+        """
+        tokenize a given text of english.
+        Seperate text with meaningful words
+        """
+        abbreviations = list(self.abbreviations.keys())
+        regex = '|'.join([re.escape(x.lower()) for x in abbreviations])
+        regex += '|[a-z]+|'
+        regex += '[+-]?(?:[0-9]+\.)+[0-9]+|'
+        regex += '|'.join([re.escape(x) for x in symbols])
+        print('regex: ', regex)
+        result = [START_TOKEN]
+        result.extend(re.findall(regex, str.lower()))
+        result.append(END_TOKEN)
+        return result
 
-
-def _extract_abbreviations(r):
-    """
-    It takes a string input and returns a list of string
-    seperating the abbreviations in the given string r
-    """
-    reg_abb = ''.join([re.escape(x) for x in abbreviations])
-    return [r]
-
-
-def word_tokenize(text):
-    """ 
-    tokenize a given text of english.
-    Seperate text with meaningful words
-    """
-    text = text.lower()
-    splitted_word = text.split()
-    tokenized_word = [START_TOKEN]
-    tokenized_word.append([x for x in splitted_word])
-    tokenized_word.append([END_TOKEN])
-
-    reex = []
-    reex.append('('.join([re.escape(k) for k in abbreviations])+')')
-    
-    return tokenized_word
-
-
-def sent_tokenize(text):
-    """
-    seperate sentences of text and return list of sentences.
-    """
-    sentences = []
-    
-    return sentences
+    def sent_tokenize(self, text):
+        """
+        sentence tokenizer:
+        seperate sentences of text and return list of sentences
+        """
+        return re.findall(re.escape('.|,'), text)
