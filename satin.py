@@ -1,5 +1,4 @@
- #!/usr/bin/python
-import tokenizer
+#!/usr/bin/python
 
 
 def prompt():

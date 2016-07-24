@@ -1,6 +1,6 @@
 """
 Package Name: tokenizer
-Descripton : 
+Descripton :
 """
 import re
 
@@ -11,13 +11,14 @@ abbreviations_filename = "data/language/en/abbreviations"
 
 # symbols of english languagexs
 symbols = ['.', '?', ',', '&', '!', ':', '$', '%', '#', '@', '~',
-               '-', '+', '=', '*', '(', ')', '^', '/','\\', '|', ';',
-               '\'', '\"' ]
+           '-', '+', '=', '*', '(', ')', '^', '/', '\\', '|', ';',
+           '\'', '\"']
 
 # Every sentences starts from START_TOKEN
 # and ends with END_TOKEN
 START_TOKEN = '_START_TOKEN_'
 END_TOKEN = '_END_TOKEN_'
+
 
 class Tokenizer:
     def __init__(self):
