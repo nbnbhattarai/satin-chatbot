@@ -41,3 +41,10 @@ the language
 main program which uses all package, receive user input
 tokenize input, use language model and knowledge 
 representation to get reply and prints the output to user.
+** TODO Others
+*** TODO PATH resolve
+we have to resolve the path for files when we
+open file from data directory from different
+packages. We should be able to open files whenever
+we import the package from anywhere ( from same directory,
+or another directory)
