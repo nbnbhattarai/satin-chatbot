@@ -3,11 +3,12 @@ Package Name: tokenizer
 Descripton :
 """
 import re
+import sys
 
 # abbreviations are stored in this file
 # when It learns new abbreviations, It insert
 # into this file.
-abbreviations_filename = "data/language/en/abbreviations"
+abbreviations_filename = "../data/language/en/abbreviations"
 
 # symbols of english languagexs
 symbols = ['.', '?', ',', '&', '!', ':', '$', '%', '#', '@', '~',
@@ -40,7 +41,7 @@ class Tokenizer:
         regex += '|[a-z]+|'
         regex += '[+-]?[0-9]+|'
         regex += '|'.join([re.escape(x) for x in symbols])
-        print('regex: ', regex)
+        # print('regex: ', regex)
         result = [START_TOKEN]
         result.extend(re.findall(regex, str.lower()))
         result.append(END_TOKEN)
@@ -52,3 +53,16 @@ class Tokenizer:
         seperate sentences of text and return list of sentences
         """
         return re.findall(re.escape('.|,'), text)
+
+
+def main(sent):
+    tokenizer = Tokenizer()
+    print(">> input: %s" % sent)
+    print(">> tokens:", tokenizer.word_tokenize(sent))
+
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print("Usage: python tokenizer.py [sentence to tokenize]")
+        sys.exit()
+    main(sys.argv[1])
