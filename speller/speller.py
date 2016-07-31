@@ -1,28 +1,5 @@
 import sys
-import re
-import os
-
-
-class Dictionary:
-    def __init__(self):
-        self.filename = "dict"
-        self.language = "english"
-        self.short[self.language] = "en"
-
-        # path resolution for dictionary file
-        if os.path.isfile('../data/language/'+self.short[self.language] +
-                          '/'+self.filename):
-            self.path = "../data/language/" + self.short[self.language] + "/"
-        elif os.path.isfile('/data/language/'+self.short[self.language] +
-                            '/'+self.filename):
-            self.path = "/data/language/" + self.short[self.language] + "/"
-
-        self.file = open(self.path+self.filename, 'r')
-        if self.file:
-            text = self.file.read()
-            self.words = re.findall("[A-Za-z]+", text)
-        else:
-            self.words = None
+import dictionary
 
 
 def spell_correct_word(word, dictionary, language_model):
