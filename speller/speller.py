@@ -7,9 +7,11 @@ dictionary = dictionary.Dictionary()
 WORDS = Counter(dictionary.words)
 
 def prob(word):
+    """Returns probability of occurence a word in the dictionary."""
     return WORDS[word] / sum(WORDS.values())
 
 def edits1(word):
+    """Returns a set of possible word combinationa that has edit distance = 1"""
     letters    = 'abcdefghijklmnopqrstuvwxyz'
     splits     = [(word[:i], word[i:])    for i in range(len(word) + 1)]
     deletes    = [L + R[1:]               for L, R in splits if R]
@@ -19,9 +21,11 @@ def edits1(word):
     return set(deletes + transposes + replaces + inserts)
 
 def edits2(word):
+    """Returns a set of possible word combinationa that has edit distance = 2"""
     return set(e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in WORDS)
 
 def known(words):
+    """Returns only those words from given words that exist in dictionary"""
     return [w for w in words if w in WORDS]
 
 def spell_correct_word(word):
