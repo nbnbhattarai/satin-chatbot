@@ -1,6 +1,7 @@
 from nltk import word_tokenize, sent_tokenize
 import pickle
-
+import dictionary
+import word2vec
 
 class nGram:
     """
@@ -16,9 +17,13 @@ class nGram:
         self.filename = filename
         self.N = N
         self.gram = [{} for i in range(0, N)]
+        self.dict = dictionary.Dictionary()
 
     def get_grams(self, tokens, n):
-        return [tuple(tokens[i:i+n]) for i in range(0, len(tokens)-n+1)]
+        word_vec_er = word2vec.WordVectorRep(dict=self.dict)
+        tokens_vec = word_vec_er.get_vectors(tokens)
+        return [tuple(tokens_vec[i:i+n]) for i in
+                range(0, len(tokens_vec)-n+1)]
 
     def add_tokens(self, tokens):
         """
