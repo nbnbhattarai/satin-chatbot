@@ -10,7 +10,7 @@ class Dictionary:
         self.filename = './data/language/' + lan + '/dict'
         self.file = open(self.filename, 'r')
         if self.file:
-            text = self.file.read()
+            text = self.file.read().lower()
             self.words = re.findall("[A-Za-z]+", text)
         else:
             self.words = None
