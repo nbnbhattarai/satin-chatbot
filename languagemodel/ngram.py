@@ -1,7 +1,9 @@
-from nltk import word_tokenize, sent_tokenize
+from nltk import sent_tokenize
+import tokenizer
 import pickle
-import dictionary
-import word2vec
+# import dictionary
+# import word2vec
+
 
 class nGram:
     """
@@ -16,12 +18,15 @@ class nGram:
         """
         self.filename = filename
         self.N = N
+        self.words = []
         self.gram = [{} for i in range(0, N)]
-        self.dict = dictionary.Dictionary()
 
     def get_grams(self, tokens, n):
-        word_vec_er = word2vec.WordVectorRep(dict=self.dict)
-        tokens_vec = word_vec_er.get_vectors(tokens)
+        # word_vec_er = word2vec.WordVectorRep(dict=self.dict)
+        # tokens_vec = tokens
+        tokens_vec = []
+        for t in tokens:
+            tokens_vec.append(self.words.index(t))
         return [tuple(tokens_vec[i:i+n]) for i in
                 range(0, len(tokens_vec)-n+1)]
 
@@ -29,10 +34,14 @@ class nGram:
         """
         Update nGram data with given token list.
         """
+        for t in tokens:
+            if t not in self.words:
+                self.words.append(t)
+
         for i in range(2, self.N+1):
             ngram_tup = self.gram[i-2].keys()
             n_gram = self.get_grams(tokens, i)
-            print(n_gram)
+            # print(n_gram)
             for g in n_gram:
                 if g in ngram_tup:
                     self.gram[i-2][g] += 1  # increase count by one
@@ -65,7 +74,7 @@ class nGram:
     def trainFromFile(self, filename):
         self.filename = filename
         file = open(filename, 'r')
-        text_data = file.read()
+        text_data = file.read().lower()
         # let's replace newline char with white space
         text_data = text_data.replace('\n', ' ')
         # let's tokenize sentences from text_data.
@@ -73,9 +82,40 @@ class nGram:
         sents = sent_tokenize(text_data)
         # let's iterate over sentences and tokenize words and update
         # n-gram data
+        tok = tokenizer.Tokenizer()
         for s in sents:
-            tokens = word_tokenize(s)
+            tokens = tok.word_tokenize(s)
             self.add_tokens(tokens)
+
+    def get_nw_bigram(self, this_word):
+        next_words = []
+        for t in self.grams[0].keys():
+            if t[0] == this_word:
+                next_words.append(t[1])
+        probs = []
+        for w in next_words:
+            probs.append(self.gram[0][(this_word, w)])
+        final = dict(zip(next_words, probs))
+        sorted(final)
+        return final[:6]
+
+    def get_nw_trigram(self, pw):
+        next_words = []
+        if len(pw) < 2:
+            return []
+        for t in self.grams[1].keys():
+            if t[0] == pw[0] and t[1] == pw[1]:
+                next_words.append(t[2])
+        probs = []
+        for w in next_words:
+            probs.append(self.gram[1][(pw[0], pw[1], w)])
+        final = dict(zip(next_words, probs))
+        sorted(final)
+        return final[:6]
+
+    def get_next_word(self, till):
+        
+        pass
 
     def construct_sent(self, start, contain=None):
         """
@@ -84,3 +124,4 @@ class nGram:
         contain : list object which contains words that should be contained in
         constructed sentence.
         """
+        

@@ -1,1 +1,1 @@
-import ngram
+from .ngram import nGram
