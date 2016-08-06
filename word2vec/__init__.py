@@ -1,1 +1,1 @@
-from word2vec import WordVectorRep
+from .word2vec import WordVectorRep

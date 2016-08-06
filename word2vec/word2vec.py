@@ -1,4 +1,5 @@
 import dictionary
+import tokenizer
 
 
 class WordVectorRep:
@@ -10,7 +11,8 @@ class WordVectorRep:
         self.ncols = 10          # word converts to list having 10 items
         if dict:
             self.dict = dict
-        self.dict = None
+        if not dict:
+            self.dict = dictionary.Dictionary()
         self.data = []
 
     def get_vector(self, word):
@@ -19,10 +21,17 @@ class WordVectorRep:
         return the row from data matrix using the index
         from dictionary
         """
+        if word == tokenizer.START_TOKEN:
+            return -1
+        elif word == tokenizer.END_TOKEN:
+            return -2
+
         try:
             return self.dict.words.index(word)
         except ValueError:
-            return -1           # if not in dictionary
+            if word in tokenizer.symbols:
+                return (-3-tokenizer.symbols.index(word))
+            return 0           # if not in dictionary
         # return self.data[self.dictionary.words.index(word)]
 
     def get_vectors(self, tokens):
