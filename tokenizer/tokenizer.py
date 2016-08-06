@@ -8,7 +8,7 @@ import sys
 # abbreviations are stored in this file
 # when It learns new abbreviations, It insert
 # into this file.
-abbreviations_filename = "../data/language/en/abbreviations"
+abbreviations_filename = "data/language/english/abbreviations"
 
 # symbols of english languagexs
 symbols = ['.', '?', ',', '&', '!', ':', '$', '%', '#', '@', '~',
