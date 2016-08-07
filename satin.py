@@ -10,8 +10,8 @@ import languagemodel
 ngram = languagemodel.nGram()
 qgram = languagemodel.nGram()
 agram = languagemodel.nGram()
-qgram.trainFromFile('datalanguage/english/questions.txt')
-agram.trainFromFile('datalanguage/english/ans.txt')
+qgram.trainFromFile('data/language/english/questions.txt')
+agram.trainFromFile('data/language/english/ans.txt')
 ngram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
 
