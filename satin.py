@@ -1,11 +1,17 @@
 #!/usr/bin/python
+import sys
 import tokenizer
 import nltk
+import random
 import languagemodel
 
 
 ngram = languagemodel.nGram()
+ngram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
+
+
+greetings = ['hi', 'hello', 'hey']
 
 
 def prompt():
@@ -16,13 +22,10 @@ def prompt():
         intext = input('input :> ')
         args = tok.word_tokenize(intext)
         output = talker(args)
-        print('satin :>' + output)
-
-
-def is_second_person(pt):
-    if pt[0] == 'you' or pt[0] == 'your':
-        return True
-    return False
+        # for g in greetings:
+        #     if g in args:
+        #         output = greetings[random.randint(0, len(greetings)-1)]+'!'
+        print('satin :> '+' '.join(output))
 
 
 def talker(args_in):
@@ -49,17 +52,33 @@ def talker(args_in):
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
-
-    next_sents = ngram.construct_sent(contain=contains)
-    return next_sents[0]
+    sentences = []
+    ngram.sent_generate(sentences, [0], 0, contain=contains)
+    print('sentences: ', sentences)
+    return ['what', 'is', 'this']
+    # return sentences[0]
 
 
 def satin():
-    while True:
-        args_in = prompt()
-        args_out = talker(args_in)
-        print('satin :> ' + args_out)
+    prompt()
+    # while True:
+    #     args_in = prompt()
+    #     args_out = talker(args_in)
+    #     print('satin :> ' + args_out)
 
 
 if __name__ == '__main__':
-    satin()
+    # prompt()
+    first_word = sys.argv[1]
+    out_s = []
+    st = [ngram.get_word_id(first_word)]
+    # st = int(first_word)
+    # print(ngram.gram[1].items())
+    for k in ngram.gram[1].keys():
+        if k[0] == st:
+            print(k)
+    ngram.sent_generate(out_s, st, 0, [])
+    for s in out_s:
+        print('sent: ', s)
+    else:
+        print('no sentences, huhuhuhu :)!')
