@@ -1,6 +1,7 @@
 from nltk import sent_tokenize
 import tokenizer
 import pickle
+import operator
 # import dictionary
 # import word2vec
 
@@ -88,63 +89,62 @@ class nGram:
             tokens = tok.word_tokenize(s)
             self.add_tokens(tokens)
 
-    def get_nw_bigram(self, this_word):
+    def get_nw_ngram(self, pw, n):
+        """
+        It returns list of next words having high probabilities by
+        using last (n-1) words of pw(previous words) using n gram.
+        """
         next_words = []
-        for t in self.grams[0].keys():
-            if t[0] == this_word:
-                next_words.append(t[1])
-        probs = []
-        for w in next_words:
-            probs.append(self.gram[0][(this_word, w)])
-        final = dict(zip(next_words, probs))
-        sorted(final)
-        return final[:6]
-
-    def get_nw_trigram(self, pw):
-        next_words = []
-        if len(pw) < 2:
+        # if pw(previous words) count is lesser than n-1 then we
+        # cannot use ngram(markov model) to find next word.
+        if len(pw) < n - 1:
             return []
-        for t in self.grams[1].keys():
-            if t[0] == pw[0] and t[1] == pw[1]:
-                next_words.append(t[2])
-        probs = []
-        for w in next_words:
-            probs.append(self.gram[1][(pw[0], pw[1], w)])
-        final = dict(zip(next_words, probs))
-        sorted(final)
-        return final[:6]
 
-    def get_nw_fourgram(self, pw):
-        next_words = []
-        if len(pw) < 4:
-            return []
-        for t in self.grams[3].keys():
-            if t[0] == pw[0] and t[1] == pw[1] and t[2] == pw[2]:
-                next_words.append(t[3])
-        probs = []
-        for w in next_words:
-            probs.append(self.gram[1][(pw[0], pw[1], pw[2], w)])
-        final = dict(zip(next_words, probs))
-        sorted(final)
-        return final[:6]
+        previous_words = pw[-n - 1:]
+        for (wt, c) in self.gram[n - 1].items():
+            words_list = list(wt)
+            if previous_words == words_list:
+                # save next word with probability as tuple
+                next_words.append((words_list[-1], c))
+        next_words = sorted(next_words, key=operator.itemgetter(1),
+                            reverse=True)
+        return next_words[:5]   # return list of (word,prob) tuple
 
     def prob(self, word_list):
         """
-        It returns probability of last word of word_list according
-        to previous words from ngram.
+        It returns unique next word from word_list list of tuples
+        it adds probability if words are appearing more than once.
         """
-        sum_prob = 0
-        sum_prob = sum_prob + self.get_nw_bigram(word_list[-2:])
-        sum_prob = sum_prob + self.get_nw_bigram(word_list[-3:])
-        sum_prob = sum_prob + self.get_nw_bigram(word_list[-4:])
-
-        return sum_prob/self.N
+        words = list(set([w[0] for w in word_list]))
+        words_with_probs = []
+        for w in words:
+            prob = 0
+            for wl in word_list:
+                if w == wl[0]:
+                    prob += wl[1]
+            words_with_probs.append((w, prob))
+        return words_with_probs
 
     def get_next_word(self, till):
+        # get list of tupels (word_id, count)
+        from_bigram = self.get_nw_ngram(till, 2)
+        from_trigram = self.get_nw_ngram(till, 3)
+        from_fourgram = self.get_nw_ngram(till, 4)
 
-        pass
+        word_list = from_bigram + from_trigram + from_fourgram
+        word_list = self.prob(word_list)
+        word_list = sorted(word_list, key=operator.itemgetter(1),
+                           reverse=True)
+        return word_list[:10]
 
-    def construct_sent(self, start=tokenizer.START_TOKEN, contain=None):
+    def get_count(self, sents, conts):
+        count = 0
+        for c in conts:
+            if c in sents:
+                ++count
+        return count
+
+    def sent_generate(self, out_sents, till, count, contain=None):
         """
         contain = ['president', 'nepal']
         it returns list of sentences that is constructed using this ngram model
@@ -152,3 +152,23 @@ class nGram:
         contain : list object which contains words that should be contained in
         constructed sentence.
         """
+        n_words = self.get_next_word(till)
+        print('inside sent_generate!')
+        print('next words: ', n_words)
+        print('till:', till)
+        for w in n_words:
+            ++count
+            till_tmp = till
+            if w == tokenizer.END_TOKEN or count > 10:
+                print('hahaha')
+                contain_count = self.get_count(till, contain)
+                if contain_count > 0:
+                    out_sents.append((till, contain_count))
+                    return True
+                else:
+                    print('no contain')
+            else:
+                till_tmp.append(w)
+                self.sent_generate(out_sents, till_tmp, count, contain)
+        else:
+            print("I don't know what you are talking about")
