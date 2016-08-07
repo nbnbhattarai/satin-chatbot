@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+import operator
 import tokenizer
 import nltk
 import random
@@ -54,9 +55,13 @@ def talker(args_in):
     contains.extend(pronouns)
     sentences = []
     ngram.sent_generate(sentences, [0], 0, contain=contains)
-    print('sentences: ', sentences)
-    return ['what', 'is', 'this']
-    # return sentences[0]
+    if len(sentences) >= 1:
+        sentences = sorted(sentences, key=operator.itemgetter(1),
+                           reverse=True)
+        actual_sent = ngram.get_sent_from_ids(sentences[0][0])
+        return actual_sent
+    else:
+        return ['I', 'don"t', 'understand!']
 
 
 def satin():
@@ -68,7 +73,7 @@ def satin():
 
 
 if __name__ == '__main__':
-    # prompt()
+    prompt()
     first_word = sys.argv[1]
     out_s = []
     st = [ngram.get_word_id(first_word)]

@@ -81,15 +81,13 @@ class nGram:
         text_data = text_data.replace('\n', ' ')
         # let's tokenize sentences from text_data.
         # I use sent_tokenize nltk function to tokenize the sentences.
-        # sents = sent_tokenize(text_data)
+        sents = sent_tokenize(text_data)
         # let's iterate over sentences and tokenize words and update
         # n-gram data
         tok = tokenizer.Tokenizer()
-        tokens = tok.word_tokenize(text_data)
-        self.add_tokens(tokens)
-        # for s in sents:
-        #     tokens = tok.word_tokenize(s)
-        #     self.add_tokens(tokens)
+        for s in sents:
+            tokens = tok.word_tokenize(s)
+            self.add_tokens(tokens)
 
     def get_nw_ngram(self, pw, n):
         """
@@ -102,10 +100,10 @@ class nGram:
         if len(pw) < n - 1:
             return []
 
-        previous_words = pw[-n - 1:]
+        previous_words = pw[-n + 1:]
         for (wt, c) in self.gram[n - 1].items():
             words_list = list(wt)
-            if previous_words == words_list:
+            if previous_words == words_list[:-1]:
                 # save next word with probability as tuple
                 next_words.append((words_list[-1], c))
         next_words = sorted(next_words, key=operator.itemgetter(1),
@@ -156,6 +154,12 @@ class nGram:
         except:
             return -1
 
+    def get_sent_from_ids(self, sent):
+        re_sent = []
+        for i in sent:
+            re_sent.append(self.words[i])
+        return re_sent
+
     def sent_generate(self, out_sents, till, count, contain=None):
         """
         contain = ['president', 'nepal']
@@ -169,10 +173,9 @@ class nGram:
         print('next words: ', n_words)
         print('till:', till)
         for w in n_words:
-            ++count
             till_tmp = till
-            if w == tokenizer.END_TOKEN or count > 10:
-                print('hahaha')
+            if w == tokenizer.END_TOKEN or count > 10 or len(out_sents) > 25:
+                print('_END_TOKEN_')
                 contain_count = self.get_count(till, contain)
                 if contain_count > 0:
                     out_sents.append((till, contain_count))
@@ -180,7 +183,11 @@ class nGram:
                 else:
                     print('no contain')
             else:
-                till_tmp.append(w)
-                self.sent_generate(out_sents, till_tmp, count, contain)
+                till_tmp.append(w[0])
+                return self.sent_generate(out_sents,
+                                          till_tmp, count+1, contain)
         else:
+            contain_count = self.get_count(till, contain)
+            out_sents.append((till, contain_count))
             print("I don't know what you are talking about")
+            return True
