@@ -10,6 +10,7 @@ class nGram:
     This is a class which represent n-gram and helps to
     calculate probability too.
     """
+
     def __init__(self, filename=None, N=4):
         """
         filename : open nGram data from file.
@@ -27,8 +28,8 @@ class nGram:
         tokens_vec = []
         for t in tokens:
             tokens_vec.append(self.words.index(t))
-        return [tuple(tokens_vec[i:i+n]) for i in
-                range(0, len(tokens_vec)-n+1)]
+        return [tuple(tokens_vec[i:i + n]) for i in
+                range(0, len(tokens_vec) - n + 1)]
 
     def add_tokens(self, tokens):
         """
@@ -38,15 +39,15 @@ class nGram:
             if t not in self.words:
                 self.words.append(t)
 
-        for i in range(2, self.N+1):
-            ngram_tup = self.gram[i-2].keys()
+        for i in range(1, self.N + 1):
+            ngram_tup = self.gram[i - 1].keys()
             n_gram = self.get_grams(tokens, i)
             # print(n_gram)
             for g in n_gram:
                 if g in ngram_tup:
-                    self.gram[i-2][g] += 1  # increase count by one
+                    self.gram[i - 1][g] += 1  # increase count by one
                 else:
-                    self.gram[i-2][g] = 1  # if first entry then count is 1
+                    self.gram[i - 1][g] = 1  # if first entry then count is 1
 
     def write(self, filename):
         """
@@ -113,15 +114,41 @@ class nGram:
         sorted(final)
         return final[:6]
 
+    def get_nw_fourgram(self, pw):
+        next_words = []
+        if len(pw) < 4:
+            return []
+        for t in self.grams[3].keys():
+            if t[0] == pw[0] and t[1] == pw[1] and t[2] == pw[2]:
+                next_words.append(t[3])
+        probs = []
+        for w in next_words:
+            probs.append(self.gram[1][(pw[0], pw[1], pw[2], w)])
+        final = dict(zip(next_words, probs))
+        sorted(final)
+        return final[:6]
+
+    def prob(self, word_list):
+        """
+        It returns probability of last word of word_list according
+        to previous words from ngram.
+        """
+        sum_prob = 0
+        sum_prob = sum_prob + self.get_nw_bigram(word_list[-2:])
+        sum_prob = sum_prob + self.get_nw_bigram(word_list[-3:])
+        sum_prob = sum_prob + self.get_nw_bigram(word_list[-4:])
+
+        return sum_prob/self.N
+
     def get_next_word(self, till):
-        
+
         pass
 
-    def construct_sent(self, start, contain=None):
+    def construct_sent(self, start=tokenizer.START_TOKEN, contain=None):
         """
+        contain = ['president', 'nepal']
         it returns list of sentences that is constructed using this ngram model
         start : starting word for sentence
         contain : list object which contains words that should be contained in
         constructed sentence.
         """
-        
