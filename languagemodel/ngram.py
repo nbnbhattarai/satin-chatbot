@@ -141,7 +141,7 @@ class nGram:
         count = 0
         for c in conts:
             if c in sents:
-                ++count
+                count += 1
         return count
 
     def get_word_id(self, token):
@@ -157,6 +157,8 @@ class nGram:
     def get_sent_from_ids(self, sent):
         re_sent = []
         for i in sent:
+            if i == 0 or i == self.words.index(tokenizer.END_TOKEN):
+                continue
             re_sent.append(self.words[i])
         return re_sent
 
@@ -170,11 +172,12 @@ class nGram:
         """
         n_words = self.get_next_word(till)
         print('inside sent_generate!')
+        print('contain:', contain)
         print('next words: ', n_words)
         print('till:', till)
         for w in n_words:
             till_tmp = till
-            if w == tokenizer.END_TOKEN or count > 10 or len(out_sents) > 25:
+            if w == tokenizer.END_TOKEN or count > 30 or len(out_sents) > 25:
                 print('_END_TOKEN_')
                 contain_count = self.get_count(till, contain)
                 if contain_count > 0:

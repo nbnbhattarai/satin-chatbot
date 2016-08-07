@@ -8,6 +8,10 @@ import languagemodel
 
 
 ngram = languagemodel.nGram()
+qgram = languagemodel.nGram()
+agram = languagemodel.nGram()
+qgram.trainFromFile('languagemodel/_testdata/questions.txt')
+agram.trainFromFile('languagemodel/_testdata/ans.txt')
 ngram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
 
@@ -50,15 +54,18 @@ def talker(args_in):
             p[0] = 'i'
         elif p[0] == 'your':
             p[0] = 'my'
+
     contains = []
     contains.extend(nouns)
-    contains.extend(pronouns)
+    print('contains:', contains)
+    contains = [agram.get_word_id(a) for a in contains[:]]
     sentences = []
-    ngram.sent_generate(sentences, [0], 0, contain=contains)
+    agram.sent_generate(sentences, [0], 0, contain=contains)
+    print(sentences)
     if len(sentences) >= 1:
         sentences = sorted(sentences, key=operator.itemgetter(1),
                            reverse=True)
-        actual_sent = ngram.get_sent_from_ids(sentences[0][0])
+        actual_sent = agram.get_sent_from_ids(sentences[0][0])
         return actual_sent
     else:
         return ['I', 'don"t', 'understand!']
