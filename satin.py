@@ -51,8 +51,9 @@ def talker(args_in):
     contains.extend(pronouns)
 
     next_sents = ngram.construct_sent(contain=contains)
-    
-    
+    return next_sents[0]
+
+
 def satin():
     while True:
         args_in = prompt()
