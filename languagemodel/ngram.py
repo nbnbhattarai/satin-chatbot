@@ -81,13 +81,15 @@ class nGram:
         text_data = text_data.replace('\n', ' ')
         # let's tokenize sentences from text_data.
         # I use sent_tokenize nltk function to tokenize the sentences.
-        sents = sent_tokenize(text_data)
+        # sents = sent_tokenize(text_data)
         # let's iterate over sentences and tokenize words and update
         # n-gram data
         tok = tokenizer.Tokenizer()
-        for s in sents:
-            tokens = tok.word_tokenize(s)
-            self.add_tokens(tokens)
+        tokens = tok.word_tokenize(text_data)
+        self.add_tokens(tokens)
+        # for s in sents:
+        #     tokens = tok.word_tokenize(s)
+        #     self.add_tokens(tokens)
 
     def get_nw_ngram(self, pw, n):
         """
@@ -143,6 +145,16 @@ class nGram:
             if c in sents:
                 ++count
         return count
+
+    def get_word_id(self, token):
+        """
+        Return word id from ngram database.
+        If word doesn't exist, then return -1.
+        """
+        try:
+            return self.words.index(token.lower())
+        except:
+            return -1
 
     def sent_generate(self, out_sents, till, count, contain=None):
         """
