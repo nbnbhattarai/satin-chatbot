@@ -3,6 +3,7 @@ import sys
 import operator
 import tokenizer
 import nltk
+import re
 import random
 import languagemodel
 
@@ -42,21 +43,27 @@ def talker(args_in):
     nouns = []
     pronouns = []
     for p in pos_tags:
-        if p[1] == 'PRP' or p[1] == 'PR':
+        if p[1] == 'PRP' or p[1] == 'PR' or p[1] == 'PRP$':
             pronouns.append(p[0])
 
     for p in pos_tags:
         if p[1] == 'NN' or p[1] == 'NNP':
             nouns.append(p[0])
 
-    for p in pronouns:
-        if p[0] == 'you':
-            p[0] = 'i'
-        elif p[0] == 'your':
-            p[0] = 'my'
+    for i in range(len(pronouns)):
+        if pronouns[i] == 'you':
+            pronouns[i] = 'i'
+        elif pronouns[i] == 'your':
+            pronouns[i] = 'my'
 
     contains = []
     contains.extend(nouns)
+    contains.extend(pronouns)
+    contains = list(set(contains))
+    if tokenizer.START_TOKEN in contains:
+        contains.remove(tokenizer.START_TOKEN)
+    if tokenizer.END_TOKEN in contains:
+        contains.remove(tokenizer.END_TOKEN)
     print('contains:', contains)
     contains = [agram.get_word_id(a) for a in contains[:]]
     sentences = []
@@ -65,6 +72,7 @@ def talker(args_in):
     if len(sentences) >= 1:
         sentences = sorted(sentences, key=operator.itemgetter(1),
                            reverse=True)
+        print('the sent: ', sentences)
         actual_sent = agram.get_sent_from_ids(sentences[0][0])
         return actual_sent
     else:
