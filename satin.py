@@ -3,6 +3,7 @@ import sys
 import operator
 import tokenizer
 import nltk
+import re
 import random
 import languagemodel
 
@@ -67,7 +68,7 @@ def talker(args_in):
     pronouns = []
     verbs = []
     for p in pos_tags:
-        if p[1] == 'PRP' or p[1] == 'PR':
+        if p[1] == 'PRP' or p[1] == 'PR' or p[1] == 'PRP$':
             pronouns.append(p[0])
 
     for p in pos_tags:
@@ -85,13 +86,26 @@ def talker(args_in):
             pronouns[i] = 'my'
 
 
+    for i in range(len(pronouns)):
+        if pronouns[i] == 'you':
+            pronouns[i] = 'i'
+        elif pronouns[i] == 'your':
+            pronouns[i] = 'my'
+
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
+
     contains.extend(verbs)
 
     print('contains:', contains)
     contains = [qgram.get_word_id(a) for a in contains[:]]
+    contains = list(set(contains))
+    if tokenizer.START_TOKEN in contains:
+        contains.remove(tokenizer.START_TOKEN)
+    if tokenizer.END_TOKEN in contains:
+        contains.remove(tokenizer.END_TOKEN)
+
     print('contains:', contains)
     sentences = []
     qgram.sent_generate(sentences, [0], 0, contain=contains)
@@ -100,6 +114,10 @@ def talker(args_in):
         sentences = sorted(sentences, key=operator.itemgetter(1),
                            reverse=True)
         actual_sent = qgram.get_sent_from_ids(sentences[0][0])
+
+        print('the sent: ', sentences)
+        actual_sent = agram.get_sent_from_ids(sentences[0][0])
+
         return actual_sent
     else:
         return ['I', 'don"t', 'understand!']

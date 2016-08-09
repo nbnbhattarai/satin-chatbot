@@ -162,7 +162,7 @@ class nGram:
             re_sent.append(self.words[i])
         return re_sent
 
-    def sent_generate(self, out_sents, till, count, contain=None):
+    def sent_generate(self, out_sents, till, count, contain):
         """
         contain = ['president', 'nepal']
         it returns list of sentences that is constructed using this ngram model
@@ -173,26 +173,28 @@ class nGram:
         n_words = self.get_next_word(till)
         print('inside sent_generate!')
         print('contain:', contain)
-        print('next words: ', n_words)
+        print('next words: ', [self.words[i[0]] for i in n_words])
         print('till:', till)
         for w in n_words:
             print('w:', w)
 
             till_tmp = till
-            if w == tokenizer.END_TOKEN or count > 30 or len(out_sents) > 25:
+            if w[0] == self.words.index(tokenizer.END_TOKEN) or count > 30 or len(out_sents) > 25:
                 print('_END_TOKEN_')
                 contain_count = self.get_count(till, contain)
-                if contain_count > 0:
+                if contain_count >= 0:
                     out_sents.append((till, contain_count))
-                    return True
+                    # continue
                 else:
                     print('no contain')
             else:
                 till_tmp.append(w[0])
-                return self.sent_generate(out_sents,
-                                          till_tmp, count+1, contain)
+                print('till_tmp:', till_tmp)
+                self.sent_generate(out_sents,
+                                   till_tmp, count + 1, contain)
         else:
             contain_count = self.get_count(till, contain)
             out_sents.append((till, contain_count))
-            #print("I don't know what you are talking about")
+
+            print("I don't know what you are talking about")
             return True
