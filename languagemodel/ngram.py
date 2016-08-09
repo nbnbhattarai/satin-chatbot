@@ -105,6 +105,7 @@ class nGram:
         pro_dist = [0, 3, 6]
 
         previous_words = pw[-n + 1:]
+        print('previous words:', [self.words[x] for x in previous_words])
         for (wt, c) in self.gram[n - 1].items():
             words_list = list(wt)
             if previous_words == words_list[:-1]:
@@ -182,9 +183,8 @@ class nGram:
         contain : list object which contains words that should be contained in
         constructed sentence.
         """
+
         n_words = self.get_next_word(till[:])
-        # print('inside sent_generate!')
-        # print('contain:', contain)
         # print('next words: ', [self.words[i[0]] for i in n_words])
         # print('till:', [self.words[i] for i in till])
         # print('## root_word', self.words[till[-1]])
@@ -193,6 +193,7 @@ class nGram:
             if w[0] == self.words.index(tokenizer.END_TOKEN) or \
                count > 30 or len(out_sents) > 1000:
                 # print('_END_TOKEN_')
+
                 contain_count = self.get_count(till[:], contain)
                 if contain_count > 0:
                     # print('sent_made :', [self.words[i] for i in till])
