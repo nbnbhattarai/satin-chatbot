@@ -41,6 +41,7 @@ def talker(args_in):
     pos_tags = nltk.pos_tag(args_in)
     nouns = []
     pronouns = []
+    verbs = []
     for p in pos_tags:
         if p[1] == 'PRP' or p[1] == 'PR':
             pronouns.append(p[0])
@@ -48,24 +49,33 @@ def talker(args_in):
     for p in pos_tags:
         if p[1] == 'NN' or p[1] == 'NNP':
             nouns.append(p[0])
+    for p in pos_tags:
+        if p[1] == 'VBP':
+            verbs.append(p[0])
 
-    for p in pronouns:
-        if p[0] == 'you':
-            p[0] = 'i'
-        elif p[0] == 'your':
-            p[0] = 'my'
+
+    for i,p in enumerate(pronouns):
+        if p == 'you':
+            pronouns[i] = 'I'
+        elif p == 'your':
+            pronouns[i] = 'my'
+
 
     contains = []
     contains.extend(nouns)
+    contains.extend(pronouns)
+    contains.extend(verbs)
+
     print('contains:', contains)
-    contains = [agram.get_word_id(a) for a in contains[:]]
+    contains = [qgram.get_word_id(a) for a in contains[:]]
+    print('contains:', contains)
     sentences = []
-    agram.sent_generate(sentences, [0], 0, contain=contains)
-    print(sentences)
+    qgram.sent_generate(sentences, [0], 0, contain=contains)
+    print("Sentences",sentences)
     if len(sentences) >= 1:
         sentences = sorted(sentences, key=operator.itemgetter(1),
                            reverse=True)
-        actual_sent = agram.get_sent_from_ids(sentences[0][0])
+        actual_sent = qgram.get_sent_from_ids(sentences[0][0])
         return actual_sent
     else:
         return ['I', 'don"t', 'understand!']
