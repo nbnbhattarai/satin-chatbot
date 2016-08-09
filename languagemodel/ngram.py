@@ -75,7 +75,7 @@ class nGram:
 
     def trainFromFile(self, filename):
         self.filename = filename
-        file = open(filename, 'r')
+        file = open(filename, 'r', encoding='ascii', errors='surrogateescape')
         text_data = file.read().lower()
         # let's replace newline char with white space
         text_data = text_data.replace('\n', ' ')
@@ -87,6 +87,7 @@ class nGram:
         tok = tokenizer.Tokenizer()
         for s in sents:
             tokens = tok.word_tokenize(s)
+            print(tokens, 'added!')
             self.add_tokens(tokens)
 
     def get_nw_ngram(self, pw, n):
@@ -162,6 +163,14 @@ class nGram:
             re_sent.append(self.words[i])
         return re_sent
 
+    def print_grams(self):
+        for i in range(2, self.N):
+            print(i, 'GRAM===========')
+            for k in self.gram[i]:
+                for j in range(len(k)):
+                    print(self.words[j], end=',')
+                print(':', self.gram[i][k])
+
     def sent_generate(self, out_sents, till, count, contain):
         """
         contain = ['president', 'nepal']
@@ -192,7 +201,7 @@ class nGram:
                 # till_tmp.append(w[0])
                 # print('till_tmp:', [self.words[i] for i in till_tmp])
                 self.sent_generate(out_sents,
-                                   till_2+[w[0]], count + 1, contain)
+                                   till_2[:]+[w[0]], count + 1, contain)
         else:
             pass
             # contain_count = self.get_count(till, contain)

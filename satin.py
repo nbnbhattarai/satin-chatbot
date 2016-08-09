@@ -11,9 +11,12 @@ import languagemodel
 qgram = languagemodel.nGram()
 agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
-qgram.trainFromFile('data/language/english/questions.txt')
-vgram.trainFromFile('data/language/english/ans.txt')
-agram.trainFromFile('data/language/english/valveteen_rabbit.txt')
+# vgram = languagemodel.nGram()
+vgram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
+# qgram.trainFromFile('data/language/english/questions.txt')
+# vgram.trainFromFile('data/language/english/ans.txt')
+# vgram.print_grams()
+# agram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
 just_repeated = ['F']
 greetings = ['hi', 'hello', 'hey']
@@ -63,16 +66,18 @@ def talker(args_in):
     to user.
     """
 
-    pos_tags = nltk.pos_tag(args_in)
+    pos_tags = nltk.pos_tag(args_in[1:-1])
     nouns = []
     pronouns = []
     verbs = []
+    print('pos_tag', pos_tags)
     for p in pos_tags:
         if p[1] == 'PRP' or p[1] == 'PR' or p[1] == 'PRP$':
             pronouns.append(p[0])
 
     for p in pos_tags:
         if p[1] == 'NNS' or p[1] == 'NNP' or p[1] == 'NN':
+            print('noun', p[0], 'added')
             nouns.append(p[0])
 
     for p in pos_tags:
@@ -85,6 +90,7 @@ def talker(args_in):
         elif pronouns[i] == 'your':
             pronouns[i] = 'my'
 
+    print('nouns', nouns)
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
