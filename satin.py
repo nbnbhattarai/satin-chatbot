@@ -8,12 +8,12 @@ import random
 import languagemodel
 
 
-ngram = languagemodel.nGram()
 qgram = languagemodel.nGram()
-agram = languagemodel.nGram()
+aagram = languagemodel.nGram()
+vgram = languagemodel.nGram()
 qgram.trainFromFile('data/language/english/questions.txt')
-agram.trainFromFile('data/language/english/ans.txt')
-ngram.trainFromFile('data/language/english/valveteen_rabbit.txt')
+aagram.trainFromFile('data/language/english/ans.txt')
+vgram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
 
 
@@ -59,24 +59,29 @@ def talker(args_in):
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
+    # let's add all tokens in contains
+    for p in pos_tags:
+        if p[0] in vgram.words:
+            contains.append(p[0])
     contains = list(set(contains))
     if tokenizer.START_TOKEN in contains:
         contains.remove(tokenizer.START_TOKEN)
     if tokenizer.END_TOKEN in contains:
         contains.remove(tokenizer.END_TOKEN)
     print('contains:', contains)
-    contains = [agram.get_word_id(a) for a in contains[:]]
+    contains = [vgram.get_word_id(a) for a in contains[:]]
     sentences = []
-    agram.sent_generate(sentences, [0], 0, contain=contains)
-    print(sentences)
+    vgram.sent_generate(sentences, [0], 0, contain=contains)
+    # print(sentences)
+    
     if len(sentences) >= 1:
         sentences = sorted(sentences, key=operator.itemgetter(1),
                            reverse=True)
-        print('the sent: ', sentences)
-        actual_sent = agram.get_sent_from_ids(sentences[0][0])
+        # print('the sent: ', sentences)
+        actual_sent = vgram.get_sent_from_ids(sentences[0][0])
         return actual_sent
     else:
-        return ['I', 'don"t', 'understand!']
+        return ['I', "don't", 'understand!']
 
 
 def satin():

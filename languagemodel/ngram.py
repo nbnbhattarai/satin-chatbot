@@ -170,27 +170,31 @@ class nGram:
         contain : list object which contains words that should be contained in
         constructed sentence.
         """
-        n_words = self.get_next_word(till)
-        print('inside sent_generate!')
-        print('contain:', contain)
+        till_2 = till[:]
+        n_words = self.get_next_word(till_2)
+        # print('inside sent_generate!')
+        # print('contain:', contain)
         print('next words: ', [self.words[i[0]] for i in n_words])
-        print('till:', till)
+        # print('till:', [self.words[i] for i in till])
         for w in n_words:
-            till_tmp = till
-            if w[0] == self.words.index(tokenizer.END_TOKEN) or count > 30 or len(out_sents) > 25:
-                print('_END_TOKEN_')
-                contain_count = self.get_count(till, contain)
+            # till_tmp = till_2[:]
+            if w[0] == self.words.index(tokenizer.END_TOKEN) or \
+               count > 30 or len(out_sents) > 25:
+                # print('_END_TOKEN_')
+                contain_count = self.get_count(till_2, contain)
                 if contain_count >= 0:
-                    out_sents.append((till, contain_count))
+                    print('sent_made :', [self.words[i] for i in till])
+                    out_sents.append((till_2, contain_count))
                     # continue
                 else:
                     print('no contain')
             else:
-                till_tmp.append(w[0])
-                print('till_tmp:', till_tmp)
+                # till_tmp.append(w[0])
+                # print('till_tmp:', [self.words[i] for i in till_tmp])
                 self.sent_generate(out_sents,
-                                   till_tmp, count + 1, contain)
+                                   till_2+[w[0]], count + 1, contain)
         else:
-            contain_count = self.get_count(till, contain)
-            out_sents.append((till, contain_count))
-            print("I don't know what you are talking about")
+            pass
+            # contain_count = self.get_count(till, contain)
+            # out_sents.append((till, contain_count))
+            # print("I don't know what you are talking about")
