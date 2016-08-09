@@ -191,14 +191,15 @@ class nGram:
         for w in n_words:
             # till_tmp = till_2[:]
             if w[0] == self.words.index(tokenizer.END_TOKEN) or \
-               count > 30 or len(out_sents) > 10000:
+               count > 30 or len(out_sents) > 1000:
                 # print('_END_TOKEN_')
                 contain_count = self.get_count(till[:], contain)
-                if contain_count >= 0:
+                if contain_count > 0:
                     # print('sent_made :', [self.words[i] for i in till])
                     out_sents.append((till[:], contain_count))
                 else:
-                    print('no contain')
+                    pass
+                    # print('no contain')
             else:
                 # till_tmp.append(w[0])
                 # print('till_tmp:', [self.words[i] for i in till_tmp])

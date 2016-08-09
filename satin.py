@@ -66,35 +66,31 @@ def talker(args_in):
     to user.
     """
 
-    pos_tags = nltk.pos_tag(args_in[1:-1])
-    nouns = []
-    pronouns = []
-    verbs = []
-    adjective = []
+    pos_tags = nltk.pos_tag(args_in[1:-1], tagset='universal')
+    # nouns = []
+    # pronouns = []
+    # verbs = []
+    # adjective = []
     print('pos_tag', pos_tags)
-    for p in pos_tags:
-        if p[1].find('PR') >= 0:
-            pronouns.append(p[0])
-        elif p[1].find('JJ') >= 0:
-            adjective.append(p[0])
-        elif p[1].find('NN') >= 0:
-            print('noun', p[0], 'added')
-            nouns.append(p[0])
-        elif p[1].find('VB') >= 0:
-            verbs.append(p[0])
-
-    for i in range(len(pronouns)):
-        if pronouns[i] == 'you':
-            pronouns[i] = 'i'
-        elif pronouns[i] == 'your':
-            pronouns[i] = 'my'
-
-    print('nouns', nouns)
     contains = []
-    contains.extend(nouns)
-    contains.extend(pronouns)
-    contains.extend(verbs)
-    contains.extend(adjective)
+
+    for p in pos_tags:
+        if p[1] == 'PRON':
+            if p[0] == 'you':
+                p[0] == 'i'
+            elif p[0] == 'your':
+                p[0] = 'my'
+
+    for p in pos_tags:
+        if p[1] == 'PRON' or p[1] == 'NOUN' or\
+           p[1] == 'VERB' or p[1] == 'ADJ' or p[1] == 'AD':
+            contains.append(p[0])
+
+    # print('nouns', nouns)
+    # contains.extend(nouns)
+    # contains.extend(pronouns)
+    # contains.extend(verbs)
+    # contains.extend(adjective)
 
     for c in contains[:]:
         if c == tokenizer.END_TOKEN or c == tokenizer.START_TOKEN:
