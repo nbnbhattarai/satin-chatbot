@@ -9,15 +9,31 @@ import languagemodel
 
 
 qgram = languagemodel.nGram()
-aagram = languagemodel.nGram()
+agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
 qgram.trainFromFile('data/language/english/questions.txt')
-aagram.trainFromFile('data/language/english/ans.txt')
-vgram.trainFromFile('data/language/english/valveteen_rabbit.txt')
+vgram.trainFromFile('data/language/english/ans.txt')
+agram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
-
-
+just_repeated = ['F']
 greetings = ['hi', 'hello', 'hey']
+queue = []
+max_length_queue = 3
+
+
+def isrepeated(text, just_repeated):
+    # print('just_repeated', just_repeated)
+    if len(queue) == max_length_queue:
+        queue.pop()
+    if len(queue) < max_length_queue:
+        queue.insert(0, text)
+        print(queue)
+    if just_repeated[0] == 'T' and queue[1] == text:
+        return True
+    elif len(queue) == max_length_queue and \
+            len(set(queue)) == 1 and set(queue).pop() == text:
+        # just_repeated = True
+        return True
 
 
 def prompt():
@@ -26,12 +42,19 @@ def prompt():
     """
     while True:
         intext = input('input :> ')
+        if isrepeated(intext, just_repeated):
+            just_repeated.insert(0, 'T')
+            print('satin :> You are repeating a text')
+            continue
+        else:
+            just_repeated.pop()
+            just_repeated.insert(0, 'F')
         args = tok.word_tokenize(intext)
         output = talker(args)
         # for g in greetings:
         #     if g in args:
         #         output = greetings[random.randint(0, len(greetings)-1)]+'!'
-        print('satin :> '+' '.join(output))
+        print('satin :> ' + ' '.join(output))
 
 
 def talker(args_in):
@@ -39,16 +62,22 @@ def talker(args_in):
     It takes input text given by user and returns the reply
     to user.
     """
+
     pos_tags = nltk.pos_tag(args_in)
     nouns = []
     pronouns = []
+    verbs = []
     for p in pos_tags:
         if p[1] == 'PRP' or p[1] == 'PR' or p[1] == 'PRP$':
             pronouns.append(p[0])
 
     for p in pos_tags:
-        if p[1] == 'NN' or p[1] == 'NNP':
+        if p[1] == 'NNS' or p[1] == 'NNP' or p[1] == 'NN':
             nouns.append(p[0])
+
+    for p in pos_tags:
+        if p[1] == 'VBP':
+            verbs.append(p[0])
 
     for i in range(len(pronouns)):
         if pronouns[i] == 'you':
@@ -59,26 +88,28 @@ def talker(args_in):
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
-    # let's add all tokens in contains
-    for p in pos_tags:
-        if p[0] in vgram.words:
-            contains.append(p[0])
-    contains = list(set(contains))
-    if tokenizer.START_TOKEN in contains:
-        contains.remove(tokenizer.START_TOKEN)
-    if tokenizer.END_TOKEN in contains:
-        contains.remove(tokenizer.END_TOKEN)
+    contains.extend(verbs)
+
+    for c in contains[:]:
+        if c == tokenizer.END_TOKEN or c == tokenizer.START_TOKEN:
+            contains.remove(c)
+
     print('contains:', contains)
+
+    # get id representation for all words in contains
     contains = [vgram.get_word_id(a) for a in contains[:]]
+
     sentences = []
     vgram.sent_generate(sentences, [0], 0, contain=contains)
     # print(sentences)
-    
+
     if len(sentences) >= 1:
         sentences = sorted(sentences, key=operator.itemgetter(1),
                            reverse=True)
         # print('the sent: ', sentences)
         actual_sent = vgram.get_sent_from_ids(sentences[0][0])
+
+        # return list of tokens for string from ids of tokens.
         return actual_sent
     else:
         return ['I', "don't", 'understand!']
@@ -96,13 +127,13 @@ if __name__ == '__main__':
     prompt()
     first_word = sys.argv[1]
     out_s = []
-    st = [ngram.get_word_id(first_word)]
+    st = [vgram.get_word_id(first_word)]
     # st = int(first_word)
-    # print(ngram.gram[1].items())
-    for k in ngram.gram[1].keys():
+    # print(vgram.gram[1].items())
+    for k in vgram.gram[1].keys():
         if k[0] == st:
             print(k)
-    ngram.sent_generate(out_s, st, 0, [])
+    vgram.sent_generate(out_s, st, 0, [])
     for s in out_s:
         print('sent: ', s)
     else:
