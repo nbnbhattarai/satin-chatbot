@@ -100,13 +100,16 @@ class nGram:
         # cannot use ngram(markov model) to find next word.
         if len(pw) < n - 1:
             return []
+        # add these count to the next word's probability
+        # increase probability if next word is found by higher grams.
+        pro_dist = [0, 3, 6]
 
         previous_words = pw[-n + 1:]
         for (wt, c) in self.gram[n - 1].items():
             words_list = list(wt)
             if previous_words == words_list[:-1]:
                 # save next word with probability as tuple
-                next_words.append((words_list[-1], c))
+                next_words.append((words_list[-1], c+pro_dist[n-2]))
         next_words = sorted(next_words, key=operator.itemgetter(1),
                             reverse=True)
         return next_words[:5]   # return list of (word,prob) tuple
@@ -179,29 +182,28 @@ class nGram:
         contain : list object which contains words that should be contained in
         constructed sentence.
         """
-        till_2 = till[:]
-        n_words = self.get_next_word(till_2)
+        n_words = self.get_next_word(till[:])
         # print('inside sent_generate!')
         # print('contain:', contain)
-        print('next words: ', [self.words[i[0]] for i in n_words])
+        # print('next words: ', [self.words[i[0]] for i in n_words])
         # print('till:', [self.words[i] for i in till])
+        # print('## root_word', self.words[till[-1]])
         for w in n_words:
             # till_tmp = till_2[:]
             if w[0] == self.words.index(tokenizer.END_TOKEN) or \
-               count > 30 or len(out_sents) > 25:
+               count > 30 or len(out_sents) > 10000:
                 # print('_END_TOKEN_')
-                contain_count = self.get_count(till_2, contain)
+                contain_count = self.get_count(till[:], contain)
                 if contain_count >= 0:
-                    print('sent_made :', [self.words[i] for i in till])
-                    out_sents.append((till_2, contain_count))
-                    # continue
+                    # print('sent_made :', [self.words[i] for i in till])
+                    out_sents.append((till[:], contain_count))
                 else:
                     print('no contain')
             else:
                 # till_tmp.append(w[0])
                 # print('till_tmp:', [self.words[i] for i in till_tmp])
                 self.sent_generate(out_sents,
-                                   till_2[:]+[w[0]], count + 1, contain)
+                                   till[:]+[w[0]], count + 1, contain)
         else:
             pass
             # contain_count = self.get_count(till, contain)

@@ -12,9 +12,9 @@ qgram = languagemodel.nGram()
 agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
 # vgram = languagemodel.nGram()
-vgram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
+# agram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
 # qgram.trainFromFile('data/language/english/questions.txt')
-# vgram.trainFromFile('data/language/english/ans.txt')
+vgram.trainFromFile('data/language/english/her_movie.srt')
 # vgram.print_grams()
 # agram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
@@ -70,18 +70,17 @@ def talker(args_in):
     nouns = []
     pronouns = []
     verbs = []
+    adjective = []
     print('pos_tag', pos_tags)
     for p in pos_tags:
-        if p[1] == 'PRP' or p[1] == 'PR' or p[1] == 'PRP$':
+        if p[1].find('PR') >= 0:
             pronouns.append(p[0])
-
-    for p in pos_tags:
-        if p[1] == 'NNS' or p[1] == 'NNP' or p[1] == 'NN':
+        elif p[1].find('JJ') >= 0:
+            adjective.append(p[0])
+        elif p[1].find('NN') >= 0:
             print('noun', p[0], 'added')
             nouns.append(p[0])
-
-    for p in pos_tags:
-        if p[1] == 'VBP':
+        elif p[1].find('VB') >= 0:
             verbs.append(p[0])
 
     for i in range(len(pronouns)):
@@ -95,6 +94,7 @@ def talker(args_in):
     contains.extend(nouns)
     contains.extend(pronouns)
     contains.extend(verbs)
+    contains.extend(adjective)
 
     for c in contains[:]:
         if c == tokenizer.END_TOKEN or c == tokenizer.START_TOKEN:
