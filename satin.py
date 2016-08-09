@@ -14,9 +14,24 @@ qgram.trainFromFile('data/language/english/questions.txt')
 agram.trainFromFile('data/language/english/ans.txt')
 ngram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
-
-
+just_repeated = ['F']
 greetings = ['hi', 'hello', 'hey']
+queue = []
+max_length_queue = 3
+
+def isrepeated(text, just_repeated):
+    #print('just_repeated', just_repeated)
+    if len(queue) == max_length_queue:
+        queue.pop()
+    if len(queue) < max_length_queue:
+        queue.insert(0,text)
+        print(queue)
+    if just_repeated[0]=='T' and queue[1] == text:
+       return True
+    elif len(queue)== max_length_queue and len(set(queue)) == 1 and set(queue).pop() == text:
+        #just_repeated = True
+        return True
+
 
 
 def prompt():
@@ -25,6 +40,13 @@ def prompt():
     """
     while True:
         intext = input('input :> ')
+        if isrepeated(intext,just_repeated):
+            just_repeated.insert(0,'T')
+            print('satin :> You are repeating a text')
+            continue
+        else:
+            just_repeated.pop()
+            just_repeated.insert(0,'F')
         args = tok.word_tokenize(intext)
         output = talker(args)
         # for g in greetings:
@@ -38,6 +60,8 @@ def talker(args_in):
     It takes input text given by user and returns the reply
     to user.
     """
+
+
     pos_tags = nltk.pos_tag(args_in)
     nouns = []
     pronouns = []

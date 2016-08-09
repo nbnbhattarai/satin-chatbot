@@ -177,7 +177,7 @@ class nGram:
         print('till:', till)
         for w in n_words:
             print('w:', w)
-            
+
             till_tmp = till
             if w == tokenizer.END_TOKEN or count > 30 or len(out_sents) > 25:
                 print('_END_TOKEN_')
