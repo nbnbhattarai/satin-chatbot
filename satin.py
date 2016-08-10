@@ -12,7 +12,7 @@ qgram = languagemodel.nGram()
 agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
 
-list_of_tm = [qgram,agram,vgram]
+list_of_tm = [qgram, agram, vgram]
 # vgram = languagemodel.nGram()
 # agram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
 qgram.trainFromFile('data/language/english/questions.txt')
@@ -69,7 +69,7 @@ def talker(args_in):
     to user.
     """
     gram = languagemodel.nGram()
-    if (args_in[len(args_in)-1]) == '.':
+    if (args_in[len(args_in) - 1]) == '.':
         gram = qgram
     else:
         gram = agram
@@ -80,7 +80,7 @@ def talker(args_in):
     contains = []
 
     for p in pos_tags:
-        if p[1] == 'PRON' or p[1] == 'NOUN' or\
+        if p[1] == 'PRON' or p[1] == 'NOUN' or p[1] == 'ADV' or\
            p[1] == 'VERB' or p[1] == 'ADJ' or p[1] == 'AD':
             if p[1] == 'PRON':
                 if p[0] == 'you':
