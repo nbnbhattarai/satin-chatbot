@@ -1,7 +1,6 @@
-hello.
+hello
 what is your name ?
 where are you from ?
 what do you know ?
 do you know me ?
 who is the president of nepal ?
-

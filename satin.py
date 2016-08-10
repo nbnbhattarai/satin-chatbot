@@ -11,15 +11,18 @@ import languagemodel
 qgram = languagemodel.nGram()
 agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
+
+list_of_tm = [qgram,agram,vgram]
 # vgram = languagemodel.nGram()
 # agram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
-# qgram.trainFromFile('data/language/english/questions.txt')
-vgram.trainFromFile('data/language/english/her_movie.srt')
+qgram.trainFromFile('data/language/english/questions.txt')
+agram.trainFromFile('data/language/english/ans.txt')
 # vgram.print_grams()
 # agram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
 just_repeated = ['F']
 greetings = ['hi', 'hello', 'hey']
+
 queue = []
 max_length_queue = 3
 
@@ -52,8 +55,8 @@ def prompt():
         else:
             just_repeated.pop()
             just_repeated.insert(0, 'F')
-        args = tok.word_tokenize(intext)
-        output = talker(args)
+
+        output = talker(intext)
         # for g in greetings:
         #     if g in args:
         #         output = greetings[random.randint(0, len(greetings)-1)]+'!'
@@ -65,8 +68,14 @@ def talker(args_in):
     It takes input text given by user and returns the reply
     to user.
     """
+    gram = languagemodel.nGram()
+    if (args_in[len(args_in)-1]) == '.':
+        gram = qgram
+    else:
+        gram = agram
+    args = tok.word_tokenize(args_in)
+    pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in))
 
-    pos_tags = nltk.pos_tag(args_in[1:-1])
     nouns = []
     pronouns = []
     verbs = []
@@ -103,17 +112,17 @@ def talker(args_in):
     print('contains:', contains)
 
     # get id representation for all words in contains
-    contains = [vgram.get_word_id(a) for a in contains[:]]
+    contains = [gram.get_word_id(a) for a in contains[:]]
 
     sentences = []
-    vgram.sent_generate(sentences, [0], 0, contain=contains)
+    gram.sent_generate(sentences, [0], 0, contain=contains)
     # print(sentences)
 
     if len(sentences) >= 1:
         sentences = sorted(sentences, key=operator.itemgetter(1),
                            reverse=True)
         # print('the sent: ', sentences)
-        actual_sent = vgram.get_sent_from_ids(sentences[0][0])
+        actual_sent = gram.get_sent_from_ids(sentences[0][0])
 
         # return list of tokens for string from ids of tokens.
         return actual_sent
