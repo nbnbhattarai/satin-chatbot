@@ -80,16 +80,17 @@ def talker(args_in):
     contains = []
 
     for p in pos_tags:
-        if p[1] == 'PRON':
-            if p[0] == 'you':
-                p[0] == 'i'
-            elif p[0] == 'your':
-                p[0] = 'my'
-
-    for p in pos_tags:
         if p[1] == 'PRON' or p[1] == 'NOUN' or\
            p[1] == 'VERB' or p[1] == 'ADJ' or p[1] == 'AD':
-            contains.append(p[0])
+            if p[1] == 'PRON':
+                if p[0] == 'you':
+                    contains.append('i')
+                elif p[0] == 'your':
+                    contains.append('my')
+                else:
+                    contains.append(p[0])
+            else:
+                contains.append(p[0])
 
     # print('nouns', nouns)
     # contains.extend(nouns)
