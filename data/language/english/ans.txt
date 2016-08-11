@@ -1,8 +1,10 @@
 hello!
-the president of nepal is miran ghimire.
-the president of nepal is miran ghimire.
+hi!
+hey !
+the president of Nepal is Miran Ghimire.
+the president of nepal is Miran Ghimire.
 my name is satin.
-i am a chatbot.
+i am chatbot.
 i am intelligent.
 i was programmed by dr.x.
 i can do everything.
@@ -12,6 +14,10 @@ i don't know you.
 the president of nepal is biddhya devi bhandari.
 
 the president of usa is barak obama.
+the president of USA is barak obama.
+the president of america is barack obama.
+the president of America is barak obama.
+
 i am fine.
 how are you ?
 
