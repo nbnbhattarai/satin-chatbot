@@ -105,7 +105,7 @@ class nGram:
         pro_dist = [0, 3, 6]
 
         previous_words = pw[-n + 1:]
-        print('previous words:', previous_words)
+        print('previous words:', [self.words[x] for x in previous_words])
         for (wt, c) in self.gram[n - 1].items():
             words_list = list(wt)
             if previous_words == words_list[:-1]:
@@ -191,15 +191,16 @@ class nGram:
         for w in n_words:
             # till_tmp = till_2[:]
             if w[0] == self.words.index(tokenizer.END_TOKEN) or \
-               count > 30 or len(out_sents) > 10000:
+               count > 30 or len(out_sents) > 1000:
                 # print('_END_TOKEN_')
 
                 contain_count = self.get_count(till[:], contain)
-                if contain_count >= 0:
+                if contain_count > 0:
                     # print('sent_made :', [self.words[i] for i in till])
                     out_sents.append((till[:], contain_count))
                 else:
-                    print('no contain')
+                    pass
+                    # print('no contain')
             else:
                 # till_tmp.append(w[0])
                 # print('till_tmp:', [self.words[i] for i in till_tmp])
