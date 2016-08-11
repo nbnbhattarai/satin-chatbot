@@ -13,7 +13,8 @@ agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
 activate_reinforcement = ['F']
 previous_contains = []
-questions_dict = {'who':'proper_nouns', 'where':'places','how':'adjectives','when':'time','what':'object',('is','am','are','has','have','would','shoud','will','shall'):'affirmation'}
+questions_dict = {'who':'proper_nouns', 'where':'places','how':'adjectives','when':'time',\
+'what':'object',('is','am','are','has','have','would','shoud','will','shall'):'affirmation'}
 list_of_tm = [qgram,agram,vgram]
 
 list_of_tm = [qgram, agram, vgram]
@@ -82,6 +83,10 @@ def talker(args_in):
     pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
 
     print('pos_tag', pos_tags)
+    pronouns = []
+    adjective =[]
+    nouns = []
+    verbs = []
 
     for p in pos_tags:
         if p[1].find('PRP') >= 0:
@@ -93,7 +98,7 @@ def talker(args_in):
             nouns.append(p[0])
         elif p[1].find('VB') >= 0:
             verbs.append(p[0])
-    print('pronouns:',pronouns)
+    #print('pronouns:',pronouns)
     for i in range(len(pronouns)):
         if pronouns[i] == 'you':
             pronouns[i] = 'I'
