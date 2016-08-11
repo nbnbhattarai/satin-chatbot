@@ -13,6 +13,7 @@ agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
 activate_reinforcement = ['F']
 previous_contains = []
+temp_contains = []
 questions_dict = {'who':'proper_nouns', 'where':'places','how':'adjectives','when':'time',\
                 'what':'object',('is','am','are','has','have','would','shoud','will','shall'):'affirmation'}
 list_of_tm = [qgram,agram,vgram]
@@ -47,7 +48,39 @@ def isrepeated(text, just_repeated):
         # just_repeated = True
         return True
 
+def get_contains(args_in):
+    pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
 
+    print('pos_tag from function', pos_tags)
+    pronouns = []
+    adjective =[]
+    nouns = []
+    verbs = []
+
+    for p in pos_tags:
+        if p[1].find('PRP') >= 0:
+            pronouns.append(p[0])
+        elif p[1].find('JJ') >= 0:
+            adjective.append(p[0])
+        elif p[1].find('NN') >= 0:
+            print('noun', p[0], 'added')
+            nouns.append(p[0])
+        elif p[1].find('VB') >= 0:
+            verbs.append(p[0])
+    # #print('pronouns:',pronouns)
+    for i in range(len(pronouns)):
+        if pronouns[i] == 'you':
+            pronouns[i] = 'I'
+        elif pronouns[i] == 'your':
+            pronouns[i] = 'My'
+    print('pronouns from function',pronouns)
+    print('nouns', nouns)
+    contains = []
+    contains.extend(nouns)
+    contains.extend(pronouns)
+    #contains.extend(verbs)
+    #contains.extend(adjective)
+    return contains
 def prompt():
     """
     prompt which asks for input and return splited words.
@@ -137,13 +170,16 @@ def talker(args_in):
         if c == tokenizer.END_TOKEN or c == tokenizer.START_TOKEN:
             contains.remove(c)
 
-    print('contains:', contains)
-    temp_contains = contains
-    print('contains:',temp_contains)
+    # print('contains:', contains)
+    # temp_contains.extend(contains)
+    # print('Temp contains:',temp_contains)
 
     #updates a database based on user response on a subject chatbot doesn't know anything.
     temp_checker = []
     if activate_reinforcement[0] == 'T':
+        #previous_text = queue[3]
+        previous_contains = get_contains(queue[2])
+        print ("Previous contains:",previous_contains)
         for i in previous_contains:
             if i in contains:
                 temp_checker.append(i)
@@ -178,7 +214,6 @@ def talker(args_in):
         return actual_sent
     else:
         activate_reinforcement.insert(0,'T')
-        previous_contains = temp_contains
         return ['I', "don't", 'know', 'you','tell', 'me!']
 
 
