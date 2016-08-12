@@ -6,9 +6,9 @@
 </qa>
 
 <qa>
-<q>where is [my|your|his|her|] <obj></q>
-<o><obj>[$1]</o>
-<a>[$1] <obj> is <obj>[$1].where</a>
+<q>what is your <obj></q>
+<a>my <obj> is {my}<obj>.what</a>
+<aa>i don't have <obj></aa>
 </qa>
 
 </qap>

@@ -1,5 +1,6 @@
 import pickle
 
+
 class Object:
     """
     This class represents the object's model of

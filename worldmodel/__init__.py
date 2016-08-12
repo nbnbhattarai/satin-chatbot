@@ -1,1 +1,1 @@
-from .worldmodel import World
+from .worldmodel import World, Object
