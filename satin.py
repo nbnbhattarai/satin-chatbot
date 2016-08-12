@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import sys
+
 import operator
 import tokenizer
 import nltk
@@ -72,16 +73,17 @@ def get_contains(args_in):
     # #print('pronouns:',pronouns)
     for i in range(len(pronouns)):
         if pronouns[i] == 'you':
-            pronouns[i] = 'I'
+            pronouns[i] = 'i'
         elif pronouns[i] == 'your':
-            pronouns[i] = 'My'
+            pronouns[i] = 'my'
+
     print('pronouns from function', pronouns)
     print('nouns', nouns)
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
-    # contains.extend(verbs)
-    # contains.extend(adjective)
+    contains.extend(verbs)
+    contains.extend(adjective)
     return contains
 
 
@@ -120,64 +122,19 @@ def talker(args_in):
     pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
 
     print('pos_tag', pos_tags)
-    # pronouns = []
-    # adjective =[]
-    # nouns = []
-    # verbs = []
-
-    # for p in pos_tags:
-    #     if p[1].find('PRP') >= 0:
-    #         pronouns.append(p[0])
-    #     elif p[1].find('JJ') >= 0:
-    #         adjective.append(p[0])
-    #     elif p[1].find('NN') >= 0:
-    #         print('noun', p[0], 'added')
-    #         nouns.append(p[0])
-    #     elif p[1].find('VB') >= 0:
-    #         verbs.append(p[0])
-    # #print('pronouns:',pronouns)
-    # for i in range(len(pronouns)):
-    #     if pronouns[i] == 'you':
-    #         pronouns[i] = 'I'
-    #     elif pronouns[i] == 'your':
-    #         pronouns[i] = 'My'
-    # print('pronouns',pronouns)
-    # print('nouns', nouns)
-    contains = []
-    # contains.extend(nouns)
-    # contains.extend(pronouns)
-    # contains.extend(verbs)
-    # contains.extend(adjective)
-
-    for p in pos_tags:
-        if p[1] == 'PRON' or p[1] == 'NOUN' or p[1] == 'ADV' or\
-           p[1] == 'VERB' or p[1] == 'ADJ' or p[1] == 'AD':
-            if p[1] == 'PRON':
-                if p[0] == 'you':
-                    contains.append('i')
-                elif p[0] == 'your':
-                    contains.append('my')
-                else:
-                    contains.append(p[0])
-            else:
-                contains.append(p[0])
-
-    # print('nouns', nouns)
-    # contains.extend(nouns)
-    # contains.extend(pronouns)
-    # contains.extend(verbs)
-    # contains.extend(adjective)
+    contains = get_contains(args_in)
 
     for c in contains[:]:
         if c == tokenizer.END_TOKEN or c == tokenizer.START_TOKEN:
             contains.remove(c)
 
-# print('contains:', contains)
-# temp_contains.extend(contains)
-# print('Temp contains:',temp_contains)
+    # print('contains:', contains)
+    # temp_conta ins.extend(contains)
+    # print('Temp contains:',temp_contains)
 
-# updates a database based on user response on a subject chatbot doesn't
-# know anything.
+    # updates a database based on user response on a subject chatbot doesn't
+    # know anything.
+
     temp_checker = []
     if activate_reinforcement[0] == 'T':
         #previous_text = queue[3]
@@ -217,27 +174,5 @@ def talker(args_in):
         activate_reinforcement.insert(0, 'T')
         return ['I', "don't", 'know', 'you', 'tell', 'me!']
 
-
-def satin():
-    prompt()
-    # while True:
-    #     args_in = prompt()
-    #     args_out = talker(args_in)
-    #     print('satin :> ' + args_out)
-
-
 if __name__ == '__main__':
     prompt()
-    first_word = sys.argv[1]
-    out_s = []
-    st = [vgram.get_word_id(first_word)]
-    # st = int(first_word)
-    # print(vgram.gram[1].items())
-    for k in vgram.gram[1].keys():
-        if k[0] == st:
-            print(k)
-    vgram.sent_generate(out_s, st, 0, [])
-    for s in out_s:
-        print('sent: ', s)
-    else:
-        print('no sentences, huhuhuhu :)!')
