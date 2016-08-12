@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import sys
-
 import operator
 import tokenizer
 import nltk
