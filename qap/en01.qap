@@ -1,0 +1,14 @@
+<qap>
+
+<qa>
+<q>where is <obj></q>
+<a><obj> is <obj.where></a>
+</qa>
+
+<qa>
+<q>where is [my|your|his|her|] <obj></q>
+<o><obj>[$1]</o>
+<a>[$1] <obj> is <obj>[$1].where</a>
+</qa>
+
+</qap>
