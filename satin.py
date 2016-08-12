@@ -13,10 +13,11 @@ agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
 activate_reinforcement = ['F']
 previous_contains = []
-questions_dict = {'who':'proper_nouns', 'where':'places','how':'adjectives','when':'time',\
-                'what':'object',('is','am','are','has','have','would','shoud','will','shall'):'affirmation'}
-list_of_tm = [qgram,agram,vgram]
-
+questions_dict = {'who': 'proper_nouns', 'where': 'places',
+                  'how': 'adjectives', 'when': 'time',
+                  'what': 'object', ('is', 'am', 'are', 'has', 'have', 'would',
+                                     'shoud', 'will', 'shall'): 'affirmation'}
+list_of_tm = [qgram, agram, vgram]
 
 
 # vgram = languagemodel.nGram()
@@ -109,10 +110,8 @@ def talker(args_in):
     contains = []
     # contains.extend(nouns)
     # contains.extend(pronouns)
-    #contains.extend(verbs)
-    #contains.extend(adjective)
-
-
+    # contains.extend(verbs)
+    # contains.extend(adjective)
 
     for p in pos_tags:
         if p[1] == 'PRON' or p[1] == 'NOUN' or p[1] == 'ADV' or\
@@ -139,27 +138,26 @@ def talker(args_in):
 
     print('contains:', contains)
     temp_contains = contains
-    print('contains:',temp_contains)
+    print('contains:', temp_contains)
 
-    #updates a database based on user response on a subject chatbot doesn't know anything.
+    # updates a database based on user response on a subject chatbot doesn't
+    # know anything.
     temp_checker = []
     if activate_reinforcement[0] == 'T':
         for i in previous_contains:
             if i in contains:
                 temp_checker.append(i)
         if previous_contains == temp_checker:
-            with open('data/language/english/ans.txt','a') as file:
+            with open('data/language/english/ans.txt', 'a') as file:
                 file.write('\n')
                 file.write(args_in)
             activate_reinforcement.clear()
-            activate_reinforcement.insert(0,'F')
+            activate_reinforcement.insert(0, 'F')
             temp_checker = []
-            return ["Thank", "you","for","describing"]
+            return ["Thank", "you", "for", "describing"]
         activate_reinforcement.clear()
-        activate_reinforcement.insert(0,'F')
+        activate_reinforcement.insert(0, 'F')
         temp_checker = []
-
-
 
     # get id representation for all words in contains
     contains = [gram.get_word_id(a) for a in contains[:]]
@@ -177,9 +175,9 @@ def talker(args_in):
         # return list of tokens for string from ids of tokens.
         return actual_sent
     else:
-        activate_reinforcement.insert(0,'T')
+        activate_reinforcement.insert(0, 'T')
         previous_contains = temp_contains
-        return ['I', "don't", 'know', 'you','tell', 'me!']
+        return ['I', "don't", 'know', 'you', 'tell', 'me!']
 
 
 def satin():
