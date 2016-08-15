@@ -59,5 +59,3 @@ class World:
             print(' [ done ]')
         except FileNotFoundError:
             print(' [ error ]')
-
-    
