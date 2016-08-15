@@ -51,7 +51,8 @@ def isrepeated(text, just_repeated):
 
 
 def get_contains(args_in):
-    pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
+    pos_tags = nltk.pos_tag(tok.word_tokenize(args_in)[1:-1])
+    # pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
 
     print('pos_tag from function', pos_tags)
     pronouns = []
@@ -83,6 +84,7 @@ def get_contains(args_in):
     contains.extend(pronouns)
     contains.extend(verbs)
     contains.extend(adjective)
+    print('contains:', contains)
     return contains
 
 
@@ -117,11 +119,13 @@ def talker(args_in):
         gram = qgram
     else:
         gram = agram
-    # args = tok.word_tokenize(args_in)
-    pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
 
-    print('pos_tag', pos_tags)
+    # args = tok.word_tokenize(args_in)
+    # pos_tags=nltk.pos_tag(nltk.word_tokenize(args_in), tagset = 'universal')
+
+    # print('pos_tag', pos_tags)
     contains = get_contains(args_in)
+    print('contains : ', contains)
 
     for c in contains[:]:
         if c == tokenizer.END_TOKEN or c == tokenizer.START_TOKEN:
@@ -136,7 +140,7 @@ def talker(args_in):
 
     temp_checker = []
     if activate_reinforcement[0] == 'T':
-        #previous_text = queue[3]
+        # previous_text = queue[3]
         previous_contains = get_contains(queue[2])
         print("Previous contains:", previous_contains)
         for i in previous_contains:
