@@ -3,6 +3,7 @@
 
 # import worldmodel
 import nltk
+import random
 
 questions_tx = ['who', 'what', 'where', 'how']
 
@@ -56,6 +57,29 @@ def interpreat_qa(q, a):
     return [pq_res, pa_res, objs]
 
 
+def interpreat_q(q):
+    pq = nltk.pos_tag(q, tagset='universal')
+    objs = []
+    pq_result = []
+    i = 0
+    for q in pq:
+        if a[1] == 'NOUN':
+            pq_result.append('<obj'+str(i)+'>')
+            objs.append(a[0])
+            i = i + 1
+        else:
+            pq_result.append(a[0])
+    return [pq_result, objs]
+
+
+def get_default_ans(q):
+    """
+    get a default answer according to the type of question
+    asked. It is called if no pattern in database is matched
+    with the asked question pattern.
+    """
+    return "I don't know what you are talking about .".split()
+
 class QAP:
     """
     Question
@@ -76,7 +100,30 @@ class QAP:
         self.qas.append((q_st, a_st, objs))
 
     def get_answer_from_question(self, q):
-        pass
+        q_pattern, objs = interpreat_q(q)
+        ans = []
+        for qa in self.qas:
+            if qa[0] == q_pattern:
+                ans.append(qa[1])
+        if len(ans) == 1:
+            return ans[0]
+        elif len(ans) == 0:
+            return get_default_ans(q_pattern)
+        else:
+            breaker_counter = 0
+            while breaker_counter < 100:
+                ans_r = ans[random.randint(0, len(ans)-1)]
+                count = 0
+                for k in ans_r:
+                    if '<obj' in k:
+                        count = count + 1
+                if len(objs) == count:
+                    break
+                breaker_counter = breaker_counter + 1
+            for i in range(len(ans_r)):
+                if '<obj' in ans_r[i]:
+                    ans_r[i] = objs[i]
+            return ans_r
 
     def load_from_file(self, filename):
         """

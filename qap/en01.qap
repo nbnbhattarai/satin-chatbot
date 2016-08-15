@@ -9,7 +9,7 @@
 <qa>
 <q>what is your <obj></q>
 <a>my <obj> is {my}<obj.what> .</a>
-<o>book,phone,cat</o>
+<o>book phone cat</o>
 <aa>i don't have <obj> .</aa>
 </qa>
 
