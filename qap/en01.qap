@@ -2,13 +2,13 @@
 
 <qa>
 <q>where is <obj></q>
-<a><obj> is <obj.where></a>
+<a><obj> is <obj.where> .</a>
 </qa>
 
 <qa>
 <q>what is your <obj></q>
-<a>my <obj> is {my}<obj>.what</a>
-<aa>i don't have <obj></aa>
+<a>my <obj> is {my}<obj.what> .</a>
+<aa>i don't have <obj> .</aa>
 </qa>
 
 </qap>
