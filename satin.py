@@ -21,7 +21,6 @@ questions_dict = {'who': 'proper_nouns', 'where': 'places',
 list_of_tm = [qgram, agram, vgram]
 
 
-# vgram = languagemodel.nGram()
 # agram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
 qgram.trainFromFile('data/language/english/questions.txt')
 agram.trainFromFile('data/language/english/ans.txt')
@@ -94,23 +93,24 @@ def prompt():
     """
     while True:
         intext = input('input :> ')
-        if intext=='':
-           print('satin :> Please say something!')
-           continue
+        if intext == '':
+            print('satin :> Please say something!')
+            continue
         else:
-           if isrepeated(intext, just_repeated):
-               just_repeated.insert(0, 'T')
-               print('satin :> You are repeating a text')
-               continue
-           else:
-               just_repeated.pop()
-               just_repeated.insert(0, 'F')
+            if isrepeated(intext, just_repeated):
+                just_repeated.insert(0, 'T')
+                print('satin :> You are repeating a text')
+                continue
+            else:
+                just_repeated.pop()
+                just_repeated.insert(0, 'F')
 
-           output = talker(intext)
-           # for g in greetings:
-           #     if g in args:
-           #         output = greetings[random.randint(0, len(greetings)-1)]+'!'
-           print('satin :> ' + ' '.join(output))
+            output = talker(intext)
+            # for g in greetings:
+            #     if g in args:
+            #         output = greetings[random.randint(0, len(greetings)-1)]+'!'
+            print('satin :> ' + ' '.join(output))
+
 
 def talker(args_in):
     """
