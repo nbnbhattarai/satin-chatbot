@@ -58,9 +58,6 @@ def interpreat_qa(q, a):
         if a[0] in objs:
             j = objs.index(a[0])
             pa_res.append('<obj' + str(j) + '>')
-        # elif 'VBZ' in a[1]:
-        #     answer = pa[i+1:]
-        #     break
         else:
             pa_res.append(a[0])
     print('answer:', answer)
@@ -75,7 +72,7 @@ def interpreat_q(q):
     for q in pq:
         if q[1] == 'NOUN':
             pq_result.append('<obj' + str(i) + '>')
-            objs.append(a[0])
+            objs.append(q[0])
             i = i + 1
         else:
             pq_result.append(q[0])
