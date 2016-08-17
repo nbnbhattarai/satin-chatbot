@@ -1,4 +1,17 @@
+# this is line comment
+# no block commenting
+# ignore a line if it starts with # character.
+
 <qap>
+
+<qa>
+<q>what is <obj></q>
+# <obj.what> replace this with what property of
+# <obj>, <obj> are found from matching <obj> of
+# question pattern.
+<a><obj> is <obj.what></a>
+<o>car,dog,horse,science,</o>
+</qa>
 
 <qa>
 <q>where is <obj></q>
@@ -8,8 +21,12 @@
 
 <qa>
 <q>what is your <obj></q>
+# your converted to my. {my} is a domain name.
+# get object with 'my' domain name and print 'what' value
+# of the given object, if not found that obj
+# then return <aa> (alternate) answer
 <a>my <obj> is {my}<obj.what> .</a>
-<o>book phone cat</o>
+<o>book,phone,cat</o>
 <aa>i don't have <obj> .</aa>
 </qa>
 
