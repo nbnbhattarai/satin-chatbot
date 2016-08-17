@@ -18,6 +18,7 @@ questions_dict = {'who': 'proper_nouns', 'where': 'places',
                   'how': 'adjectives', 'when': 'time',
                   'what': 'object', ('is', 'am', 'are', 'has', 'have', 'would',
                                      'shoud', 'will', 'shall'): 'affirmation'}
+
 list_of_tm = [qgram, agram, vgram]
 
 

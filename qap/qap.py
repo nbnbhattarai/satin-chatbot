@@ -26,25 +26,31 @@ def interpreat_qa(q, a):
     objs = ['cat']
     """
 
-    pq = nltk.pos_tag(q, tagset='universal')
-    pa = nltk.pos_tag(a, tagset='universal')
+    pq = nltk.pos_tag(q)  # , tagset='universal')
+    pa = nltk.pos_tag(a)  # , tagset='universal')
 
     i = 0
     objs = []              # list of objects in question/answer
     pq_res = []                 # final result of xml syntax question
     pa_res = []                 # final result of xml syntax answer
-    ques = []                   # find question types list from question_tx
-
+    ques = ''                   # find question types list from question_tx
+    answer = []
+    pronouns = []
     for k in questions_tx:
         if k in q:
-            ques.append(k)
+            ques = k
+            break
+
+    print('ques:', ques)
 
     for a in pq:
-        if a[1] == 'NOUN':
+        if 'NN' in a[1]:
             pq_res.append('<obj' + str(i) + '>')
             objs.append(a[0])
             i = i + 1
         else:
+            if 'PRP' in a[1]:
+                pronouns.append(a[0])
             pq_res.append(a[0] + ' ')
 
     for i in range(len(pa)):
@@ -52,8 +58,12 @@ def interpreat_qa(q, a):
         if a[0] in objs:
             j = objs.index(a[0])
             pa_res.append('<obj' + str(j) + '>')
+        # elif 'VBZ' in a[1]:
+        #     answer = pa[i+1:]
+        #     break
         else:
             pa_res.append(a[0])
+    print('answer:', answer)
     return [pq_res, pa_res, objs]
 
 
@@ -63,12 +73,12 @@ def interpreat_q(q):
     pq_result = []
     i = 0
     for q in pq:
-        if a[1] == 'NOUN':
-            pq_result.append('<obj'+str(i)+'>')
+        if q[1] == 'NOUN':
+            pq_result.append('<obj' + str(i) + '>')
             objs.append(a[0])
             i = i + 1
         else:
-            pq_result.append(a[0])
+            pq_result.append(q[0])
     return [pq_result, objs]
 
 
@@ -79,6 +89,7 @@ def get_default_ans(q):
     with the asked question pattern.
     """
     return "I don't know what you are talking about .".split()
+
 
 class QAP:
     """
@@ -112,7 +123,7 @@ class QAP:
         else:
             breaker_counter = 0
             while breaker_counter < 100:
-                ans_r = ans[random.randint(0, len(ans)-1)]
+                ans_r = ans[random.randint(0, len(ans) - 1)]
                 count = 0
                 for k in ans_r:
                     if '<obj' in k:

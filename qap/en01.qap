@@ -3,31 +3,35 @@
 # ignore a line if it starts with # character.
 
 <qap>
+<qa>
+<q>what is your <obj0></q>
+<a>my <obj0> is {my}<obj0.what></a>
+</qa>
 
 <qa>
-<q>what is <obj></q>
-# <obj.what> replace this with what property of
-# <obj>, <obj> are found from matching <obj> of
+<q>what is <obj0></q>
+# <obj0.what> replace this with what property of
+# <obj0>, <obj0> are found from matching <obj0> of
 # question pattern.
-<a><obj> is <obj.what></a>
+<a><obj0> is <obj0.what></a>
 <o>car,dog,horse,science,</o>
 </qa>
 
 <qa>
-<q>where is <obj></q>
-<a><obj> is <obj.where> .</a>
+<q>where is <obj0></q>
+<a><obj0> is <obj0.where> .</a>
 <o>cow,dog,horse</o>
 </qa>
 
 <qa>
-<q>what is your <obj></q>
+<q>what is your <obj0></q>
 # your converted to my. {my} is a domain name.
 # get object with 'my' domain name and print 'what' value
-# of the given object, if not found that obj
+# of the given object, if not found that obj0
 # then return <aa> (alternate) answer
-<a>my <obj> is {my}<obj.what> .</a>
+<a>my <obj0> is {my}<obj0.what> .</a>
 <o>book,phone,cat</o>
-<aa>i don't have <obj> .</aa>
+<aa>i don't have <obj0> .</aa>
 </qa>
 
 </qap>
