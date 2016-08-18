@@ -6,6 +6,7 @@
 <qa>
 <q>what is your <obj0></q>
 <a>my <obj0> is {my}<obj0.what></a>
+<o>name,birthdate,firstname,lastname</o>
 </qa>
 
 <qa>

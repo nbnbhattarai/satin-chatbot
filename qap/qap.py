@@ -2,6 +2,7 @@
 # specific question pattern, let's update answer pattern.
 
 # from worldmodel import World
+import sys
 import nltk
 import random
 import re
@@ -91,7 +92,7 @@ def get_default_ans(q):
 
 class QAP:
     """
-    Question
+    Question Answer Pattern Matching for answer generation.
     """
 
     def __init__(self, filename=None, wmodel=None):
@@ -113,12 +114,16 @@ class QAP:
         ans = []
         for qa in self.qas:
             if qa[0] == q_pattern:
-                ans.append(qa[1])
+                ans.append((qa[1], qa[2]))
         if len(ans) == 1:
             return ans[0]
         elif len(ans) == 0:
             return get_default_ans(q_pattern)
         else:
+            true_ans = []
+            for a in ans:
+                if sorted(a[1]) == sorted(objs):
+                    true_ans.append(a[0])
             breaker_counter = 0
             while breaker_counter < 100:
                 ans_r = ans[random.randint(0, len(ans) - 1)]
@@ -139,14 +144,19 @@ class QAP:
             print(qa)
 
     def save_to_file(self, filename):
+        print('writing to file ...')
         try:
             file = open(filename, 'w')
             restr = '<qap>'
             for qa in self.qas:
+                if len(qa) < 3:
+                    continue
                 restr += '<qa>\n'
-                restr += '<q>'+' '.join(qa[0])+'</q>\n'
-                restr += '<a>'+' '.join(qa[1])+'</a>\n'
-                restr += '<o>'+';'.join(qa[2])+'</o>\n'
+                restr += '<q>' + qa[0] + '</q>\n'
+                restr += '<a>' + qa[1] + '</a>\n'
+                restr += '<o>' + ','.join(qa[2]) + '</o>\n'
+                restr += '</qa>\n'
+            restr += '</qap>'
             file.write(restr)
         except Exception as e:
             print('Exception :', str(e))
@@ -180,8 +190,6 @@ class QAP:
 
             objects = [x.split(',') for x in re.findall(r'<o>(.*?)</o>',
                                                         lines)]
-            if len(answers) < len(questions):
-                raise Exception('Error')
             for i in range(len(questions)):
                 self.qas.append((questions[i], answers[i],
                                  objects[i]))
@@ -192,6 +200,11 @@ if __name__ == '__main__':
     in_question = "what do you know about maruti car"
     # world = World()
     # world.read_readable('data_test.xml')
+    filename = 'en01.qap'
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
     qap = QAP()
-    qap.load_from_file('en01.qap')
+    qap.load_from_file(filename)
+    qap.save_to_file(' '.join(filename.split('.')[:-1]) + '_test.' +
+                     filename.split('.')[-1])
     qap.print()
