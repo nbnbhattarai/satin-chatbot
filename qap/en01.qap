@@ -14,7 +14,7 @@
 # <obj0>, <obj0> are found from matching <obj0> of
 # question pattern.
 <a><obj0> is <obj0.what></a>
-<o>car,dog,horse,science,</o>
+<o>car,dog,horse,science</o>
 </qa>
 
 <qa>

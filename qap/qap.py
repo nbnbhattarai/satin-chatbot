@@ -1,9 +1,10 @@
 # Let's make predefined questions patterns. and with given answer to a
 # specific question pattern, let's update answer pattern.
 
-# import worldmodel
+# from worldmodel import World
 import nltk
 import random
+import re
 
 questions_tx = ['who', 'what', 'where', 'how']
 
@@ -133,6 +134,23 @@ class QAP:
                     ans_r[i] = objs[i]
             return ans_r
 
+    def print(self):
+        for qa in self.qas:
+            print(qa)
+
+    def save_to_file(self, filename):
+        try:
+            file = open(filename, 'w')
+            restr = '<qap>'
+            for qa in self.qas:
+                restr += '<qa>\n'
+                restr += '<q>'+' '.join(qa[0])+'</q>\n'
+                restr += '<a>'+' '.join(qa[1])+'</a>\n'
+                restr += '<o>'+';'.join(qa[2])+'</o>\n'
+            file.write(restr)
+        except Exception as e:
+            print('Exception :', str(e))
+
     def load_from_file(self, filename):
         """
         Get patterns and objects from a xml type file.
@@ -151,4 +169,29 @@ class QAP:
         from a specific class exist, then a class name is added insted of
         object name.
         """
-        pass
+        try:
+            file = open(filename, 'r')
+            lines = file.read().replace('\n', ' ')
+            # for now, there is only one question, one answer pair
+            # if two same questions are there, they are written seperately
+            # with seperate answer pattern.
+            questions = re.findall(r'<q>(.*?)</q>', lines)
+            answers = re.findall(r'<a>(.*?)</a>', lines)
+
+            objects = [x.split(',') for x in re.findall(r'<o>(.*?)</o>',
+                                                        lines)]
+            if len(answers) < len(questions):
+                raise Exception('Error')
+            for i in range(len(questions)):
+                self.qas.append((questions[i], answers[i],
+                                 objects[i]))
+        except Exception as e:
+            print('Exception :', str(e))
+
+if __name__ == '__main__':
+    in_question = "what do you know about maruti car"
+    # world = World()
+    # world.read_readable('data_test.xml')
+    qap = QAP()
+    qap.load_from_file('en01.qap')
+    qap.print()

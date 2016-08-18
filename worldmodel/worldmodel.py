@@ -1,4 +1,5 @@
 import pickle
+import re
 
 
 class Object:
@@ -43,7 +44,7 @@ class Object:
         res_str += ('</obj>\n')
         return res_str
 
-    def from_str(self, in_lines, world):
+    def from_str(self, in_lines):
         whichtag = ''
         for l in in_lines:
             sepe = l.split(' ')
@@ -63,7 +64,7 @@ class Object:
                 clss = sepe[2].split(';')
                 for c in clss:
                     if len(c) > 0:
-                        self.inclass.append(world.get_obj_by_name(c))
+                        self.inclass.append(c)
             elif sepe[0] == 'isclass':
                 self.isclass = sepe[2] == 'True'
 
@@ -76,33 +77,26 @@ class World:
     """
 
     def __init__(self):
-        self.objects = []       # objects in world
+        self.objects = {}       # objects in world
+        self.classobjects = {}  # objects list with classname as key
 
     def add_object(self, obj):
-        self.objects.append(obj)
-
-    def get_obj_of_class(self, o_class):
-        res = []
-        for o in self.objects:
-            if o_class in o.inclass:
-                res.append(o)
-        return res
+        if obj.name in self.objects.keys():
+            print('Cannot add object, object with same name already exist')
+        else:
+            self.objects[obj.name] = obj
+            for cl in obj.inclass:
+                if cl in self.classobjects.keys():
+                    self.classobjects[cl] = self.classobjects[cl] + [obj.name]
+                else:
+                    self.classobjects[cl] = [obj.name]
 
     def print_objects(self):
-        classes_list = []
-        for o in self.objects:
-            if o.isclass:
-                classes_list.append(o)
-
-        for c in classes_list:
-            objs = self.get_obj_of_class(c)
-            print('class:', c.name, ' objs:', [
-                  (x.name, x.informations) for x in objs])
-
-    def get_obj_by_name(self, name):
-        for o in self.objects:
-            if o.name == name:
-                return o
+        for c in self.classobjects.keys():
+            print('class:', c)
+            print('objects:', [(self.objects[x].name,
+                                self.objects[x].informations)
+                               for x in self.classobjects[c]])
 
     def write_readable(self, filename):
         """
@@ -111,7 +105,8 @@ class World:
         print('writing file.')
         try:
             file = open(filename, 'w', encoding='ascii')
-            for o in self.objects:
+            objects = self.objects.values()
+            for o in objects:
                 file.write(o.in_str())
             print(' [ done ]')
         except FileNotFoundError:
@@ -122,29 +117,18 @@ class World:
         Read readable file in defined format.
         """
         print('opening from file.')
-        objs = []
         try:
             file = open(filename, 'r')
-            lines = file.read()
-            lines = lines.split('\n')
-            for l in lines[:]:
-                if len(l) == 0:
-                    lines.remove(l)
-            isintag = False
-            o_lines = []
-            print(lines)
-            for l in lines:
-                if '<obj>' in l:
-                    isintag = True
-                elif '</obj>' in l:
-                    isintag = False
-                    new_o = Object()
-                    new_o.from_str(o_lines, self)
-                    objs.append(objs)
-                    self.objects.append(new_o)
-                    o_lines = []
-                elif isintag:
-                    o_lines.append(l)
+            text = file.read().replace('\n', '$')
+            objects = re.findall(r'<obj>(.*?)</obj>', text)
+            for o in objects:
+                o_str = o.split('$')
+                fr_str = []
+                for os in o_str[:]:
+                    fr_str.append(os.strip())
+                temp_obj = Object()
+                temp_obj.from_str(fr_str)
+                self.add_object(temp_obj)
             print(' [ done ]')
         except FileNotFoundError:
             print(' [ error ]')
