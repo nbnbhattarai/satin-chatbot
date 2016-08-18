@@ -58,7 +58,7 @@ class Object:
                 att_sep = l.split(' ')
                 self.informations[att_sep[0]] = ' '.join(att_sep[2:])
             elif sepe[0] == 'name' and len(sepe) >= 3:
-                print('name:' + ' '.join(sepe[2:]))
+                # print('name:' + ' '.join(sepe[2:]))
                 self.name = ' '.join(sepe[2:])
             elif sepe[0] == 'class':
                 clss = sepe[2].split(';')
@@ -66,7 +66,7 @@ class Object:
                     if len(c) > 0:
                         self.inclass.append(c)
             elif sepe[0] == 'isclass':
-                self.isclass = sepe[2] == 'True'
+                self.isclass = (sepe[2] == 'True')
 
 
 class World:
@@ -81,22 +81,27 @@ class World:
         self.classobjects = {}  # objects list with classname as key
 
     def add_object(self, obj):
+        if obj.isclass:
+            if obj.name not in self.classobjects.keys():
+                self.classobjects[obj.name] = []
         if obj.name in self.objects.keys():
             print('Cannot add object, object with same name already exist')
         else:
             self.objects[obj.name] = obj
             for cl in obj.inclass:
                 if cl in self.classobjects.keys():
-                    self.classobjects[cl] = self.classobjects[cl] + [obj.name]
+                    if obj.name not in self.classobjects[cl]:
+                        self.classobjects[cl] = self.classobjects[cl] +\
+                                                [obj.name]
                 else:
                     self.classobjects[cl] = [obj.name]
 
     def print_objects(self):
         for c in self.classobjects.keys():
-            print('class:', c)
-            print('objects:', [(self.objects[x].name,
-                                self.objects[x].informations)
-                               for x in self.classobjects[c]])
+            print('class:', c, self.objects[c].informations)
+        for o in self.objects.values():
+            if not o.isclass:
+                print('object:', o.name, o.informations)
 
     def write_readable(self, filename):
         """
@@ -116,7 +121,7 @@ class World:
         """
         Read readable file in defined format.
         """
-        print('opening from file.')
+        print('opening from file.', end='')
         try:
             file = open(filename, 'r')
             text = file.read().replace('\n', '$')
@@ -137,7 +142,7 @@ class World:
         """
         Write this clas to a file.
         """
-        print('writing file.')
+        print('writing file.', end='')
         try:
             file = open(filename, 'wb')
             file.write(pickle.dumps(self.__dict__))
@@ -146,7 +151,7 @@ class World:
             print(' [ error ]')
 
     def open_from_file(self, filename):
-        print('opening from file.')
+        print('opening from file.', end=',')
         try:
             file = open(filename, 'rb')
             datapickle = file.read()
@@ -185,5 +190,5 @@ if __name__ == '__main__':
     # wm.add_object(o_toyota)
     # wm.print_objects()
     # wm.write_readable('data_test.xml')
-    wm.read_readable('data_test.xml')
+    wm.read_readable('data.wm')
     wm.print_objects()

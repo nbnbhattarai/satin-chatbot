@@ -1,0 +1,67 @@
+<obj>
+name = animal
+isclass = True
+</obj>
+<obj>
+name = car
+isclass = True
+</obj>
+<obj>
+name = cow
+class = animal;
+isclass = True
+<attr>
+horn = 2
+</attr>
+</obj>
+<obj>
+name = dog
+class = animal;
+isclass = True
+<attr>
+horn = False
+</attr>
+</obj>
+<obj>
+name = cat
+class = animal;
+isclass = True
+<attr>
+horn = False
+</attr>
+</obj>
+<obj>
+name = bmw
+class = car;
+isclass = True
+<attr>
+wheel = 4
+</attr>
+</obj>
+<obj>
+name = hyundai
+class = car;
+isclass = True
+<attr>
+wheel = 6
+</attr>
+</obj>
+<obj>
+name = toyota
+class = car;
+isclass = True
+<attr>
+wheel = 8
+</attr>
+</obj>
+<obj>
+name = my
+isclass = True
+<attr>
+name = satin
+age = 20
+gender = female
+sex = female
+address = computer 
+</attr>
+</obj>
