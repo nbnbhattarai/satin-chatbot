@@ -134,10 +134,10 @@ def get_contains(args_in):
             structure[i] = 'I'
             if structure[0] == 'are':
                 structure[0] = 'am'
-                structure[0],structure[i] = structure[i],structure[0]
+                #structure[0],structure[i] = structure[i],structure[0]
             elif structure[0] == 'were':
                 structure[0] = 'was'
-                structure[0],structure[i] = structure[i],structure[0]
+                #structure[0],structure[i] = structure[i],structure[0]
             structure[0],structure[i] = structure[i],structure[0]
         elif k.lower() =='your':
             structure[i] = 'My'
