@@ -26,4 +26,9 @@ how are you ?
 i am fine.
 
 may be you can.
-may be
+<<<<<<< HEAD
+may be .
+
+
+sun is a star.
+sun is very hot.

@@ -1,7 +1,7 @@
 # Let's make predefined questions patterns. and with given answer to a
 # specific question pattern, let's update answer pattern.
 
-# from worldmodel import World
+from worldmodel import World
 import sys
 import nltk
 import random
@@ -81,6 +81,61 @@ def interpreat_q(q):
     return [pq_result, objs]
 
 
+def fill_ans_pattern(a, objs, world):
+    """
+    Replace <obj.prop> with property of <obj> and
+    return the resultant list.
+    for <obj0.obj1> it converts to ('obj', '0', 'obj', '1')
+    and and replace that with value of obj at index 0 with
+    property of name of obj at index 1
+    for <obj1.name> it returns ('obj', '1', 'name', '')
+    """
+    obj_prop = []
+    result = []
+    for k in range(len(a)):
+        print(a[k])
+        if '<obj' in a[k]:      # filter token with obj or nonobj.
+            r = re.findall(
+                re.compile("(\{([^}]+)\})?<(\D+)(\d+)(.(\D+)(\d+)?)?>"),
+                a[k])
+            # r[0]
+            # r = re.findall("<(.*?)([0-9]+)*\.(.*?)([0-9]+)*>",
+            #                a[k])
+            print(r)
+            if len(r) > 0:
+                r = r[0]
+                classname = r[1]
+                first_id = int(r[3])
+                print('f:', first_id)
+                if len(classname) > 0:
+                    objname = classname + '_' + objs[first_id]
+                else:
+                    objname = objs[first_id]
+                print('objname:', objname)
+                prop_text = ''
+                if len(r[6]) == 0:
+                    if len(r[5]) > 0:
+                        prop_text = r[5]
+                else:
+                    second_id = int(r[6])
+                    print('s:', second_id)
+                    prop_text = objs[second_id]
+                print('prop_text:', prop_text)
+                if len(prop_text) > 0:
+                    if objname in world.objects.keys():
+                        obj = world.objects[objname]
+                        if prop_text in obj.informations.keys():
+                            result.append(obj.informations[prop_text])
+                        else:
+                            result.append(", i don't know")
+                else:
+                    result.append(objname)
+        else:
+            result.append(a[k])
+    # It returns tuple of (obj, id, prop_or_obj, obj_id_if_obj)
+    return result
+
+
 def get_default_ans(q):
     """
     get a default answer according to the type of question
@@ -113,7 +168,9 @@ class QAP:
         q_pattern, objs = interpreat_q(q)
         ans = []
         for qa in self.qas:
-            if qa[0] == q_pattern:
+            print(qa, q_pattern)
+            if list(qa[0]) == q_pattern:
+                print('matched')
                 ans.append((qa[1], qa[2]))
         if len(ans) == 1:
             return ans[0]
@@ -196,15 +253,24 @@ class QAP:
         except Exception as e:
             print('Exception :', str(e))
 
-if __name__ == '__main__':
-    in_question = "what do you know about maruti car"
-    # world = World()
-    # world.read_readable('data_test.xml')
-    filename = 'en01.qap'
+
+def main():
+    world = World()
+    world.read_readable('./data/traindata/objects')
+    filename = './data/traindata/questionanswers'
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     qap = QAP()
     qap.load_from_file(filename)
-    qap.save_to_file(' '.join(filename.split('.')[:-1]) + '_test.' +
-                     filename.split('.')[-1])
-    qap.print()
+    # qap.save_to_file(' '.join(filename.split('.')[:-1]) + '_test.' +
+    #                  filename.split('.')[-1])
+    # qap.print()
+    # ques = 'what is <obj0> of <obj1> ?'.split()
+    # ans = 'the <obj0> of <obj1> is <obj1.obj0>'.split()
+    ans = ['<obj0.what>']
+    objs = ['earth']
+    res = fill_ans_pattern(ans, objs, world)
+    print(res)
+
+if __name__ == '__main__':
+    main()
