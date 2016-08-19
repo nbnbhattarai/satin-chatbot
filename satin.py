@@ -165,8 +165,12 @@ def get_contains(args_in):
         #elif k.lower() == 'it':
         #    pass
     #print('Structure',structure[0])
-    if structure[0] == 'is' or structure == 'are':
-        structure[0],structure[1] = structure[1],structure[0]
+    try:
+        if structure[0] == 'is' or structure == 'are':
+            structure.append(structure[0])
+            structure.remove(structure[0])
+    except IndexError:
+        pass
     print("Final Structure of sentence:", structure)
     #print("Object type",object_type)
     # #print('pronouns:',pronouns)
