@@ -105,16 +105,12 @@ class nGram:
         pro_dist = [0, 3, 6]
 
         previous_words = pw[-n + 1:]
-<<<<<<< HEAD
         # print('previous words:', [self.words[x] for x in previous_words])
-=======
-        #print('previous words:', [self.words[x] for x in previous_words])
->>>>>>> 181abb4ba6df4270ecb441e72929d2ca4aa5c471
         for (wt, c) in self.gram[n - 1].items():
             words_list = list(wt)
             if previous_words == words_list[:-1]:
                 # save next word with probability as tuple
-                next_words.append((words_list[-1], c+pro_dist[n-2]))
+                next_words.append((words_list[-1], c + pro_dist[n - 2]))
         next_words = sorted(next_words, key=operator.itemgetter(1),
                             reverse=True)
         return next_words[:5]   # return list of (word,prob) tuple
@@ -195,7 +191,7 @@ class nGram:
         # print('till:', [self.words[i] for i in till])
         # print('## root_word', self.words[till[-1]])
         for w in n_words:
-            if till[:]+[w[0]] in done_sents:
+            if till[:] + [w[0]] in done_sents:
                 print('break:')
                 break
             # till_tmp = till_2[:]
@@ -218,7 +214,7 @@ class nGram:
                 # till_tmp.append(w[0])
                 # print('till_tmp:', [self.words[i] for i in till_tmp])
                 self.sent_generate(out_sents, done_sents,
-                                   till[:]+[w[0]], count + 1, contain)
+                                   till[:] + [w[0]], count + 1, contain)
         else:
             return
             # contain_count = self.get_count(till, contain)
