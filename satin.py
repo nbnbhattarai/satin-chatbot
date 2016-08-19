@@ -103,7 +103,10 @@ def get_contains(args_in):
         try:
             structure = (args_in_list[pos_tags[1].index('VBZ'):])
         except:
-            structure = (args_in_list[pos_tags[1].index('VBD'):])
+            try:
+                structure = (args_in_list[pos_tags[1].index('VBD'):])
+            except:
+                structure = (args_in_list[pos_tags[1].index('MD'):])
     except IndexError:
         structure = []
     try:
@@ -135,6 +138,7 @@ def get_contains(args_in):
             elif structure[0] == 'were':
                 structure[0] = 'was'
                 structure[0],structure[i] = structure[i],structure[0]
+            structure[0],structure[i] = structure[i],structure[0]
         elif k.lower() =='your':
             structure[i] = 'My'
             structure.append(structure[0])
@@ -145,6 +149,10 @@ def get_contains(args_in):
             structure.remove(structure[0])
         elif k.lower() =='i':
             structure[i] = 'You'
+            if structure[0] == 'am':
+                structure[0] ='are'
+                structure[0],structure[i] = structure[i],structure[0]
+            structure[0],structure[i] = structure[i],structure[0]
         elif k.lower() == 'it':
             pass
     print("Final Structure of sentence:", structure)
