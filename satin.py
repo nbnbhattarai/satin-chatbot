@@ -24,7 +24,11 @@ list_of_tm = [qgram, agram, vgram]
 
 # agram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
 qgram.trainFromFile('data/language/english/questions.txt')
-agram.trainFromFile('data/language/english/ans.txt')
+if len(sys.argv) > 1:
+    agram.trainFromFile(sys.argv[1])
+else:
+    agram.trainFromFile('data/language/english/ans.txt')
+
 # vgram.print_grams()
 # agram.trainFromFile('data/language/english/valveteen_rabbit.txt')
 tok = tokenizer.Tokenizer()
@@ -85,7 +89,7 @@ def get_contains(args_in):
     contains.extend(verbs)
     contains.extend(adjective)
     print('contains:', contains)
-    return contains
+    return list(set(contains))
 
 
 def prompt():
@@ -94,7 +98,7 @@ def prompt():
     """
     while True:
         intext = input('input :> ')
-        if intext == '':
+        if len(intext) == 0:
             print('satin :> Please say something!')
             continue
         else:
@@ -107,6 +111,7 @@ def prompt():
                 just_repeated.insert(0, 'F')
 
             output = talker(intext)
+            print('intext:', intext)
             # for g in greetings:
             #     if g in args:
             #         output = greetings[random.randint(0, len(greetings)-1)]+'!'
@@ -166,14 +171,18 @@ def talker(args_in):
     contains = [gram.get_word_id(a) for a in contains[:]]
 
     sentences = []
-    gram.sent_generate(sentences, [0], 0, contain=contains)
+    done_sents = []
+    gram.sent_generate(sentences, done_sents, [0], 0, contain=contains)
+
     # print(sentences)
 
     if len(sentences) >= 1:
         sentences = sorted(sentences, key=operator.itemgetter(1),
                            reverse=True)
         # print('the sent: ', sentences)
-        actual_sent = gram.get_sent_from_ids(sentences[0][0])
+        sentences = sentences[:4]
+        actual_sent = gram.get_sent_from_ids(sentences[random.randint(0, len(sentences)-1)][0])
+        # actual_sent = gram.get_sent_from_ids(sentences[
 
         # return list of tokens for string from ids of tokens.
         return actual_sent
