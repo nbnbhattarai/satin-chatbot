@@ -106,9 +106,18 @@ def get_contains(args_in):
             try:
                 structure = (args_in_list[pos_tags[1].index('VBD'):])
             except:
-                structure = (args_in_list[pos_tags[1].index('MD'):])
+                try:
+                    structure = (args_in_list[pos_tags[1].index('MD'):])
+                except:
+                    try:
+                        structure = (args_in_list[pos_tags[1].index('VB'):])
+                    except:
+                        structure = (args_in_list[pos_tags[0].index('MD')-1:])
+                        print("S: ",structure, pos_tags[0].index('MD'))
     except IndexError:
         structure = []
+
+
     try:
         if structure[len(structure)-1] == '?' or '.':
 
