@@ -109,7 +109,8 @@ class World:
         """
         print('writing file.')
         try:
-            file = open(filename, 'w', encoding='ascii')
+            file = open(filename, 'w', encoding='ascii',
+                        errors='surrogateescape')
             objects = self.objects.values()
             for o in objects:
                 file.write(o.in_str())
@@ -123,7 +124,8 @@ class World:
         """
         print('opening from file.', end='')
         try:
-            file = open(filename, 'r')
+            file = open(filename, 'r',
+                        errors='surrogateescape')
             text = file.read().replace('\n', '$')
             objects = re.findall(r'<obj>(.*?)</obj>', text)
             for o in objects:
@@ -153,7 +155,8 @@ class World:
     def open_from_file(self, filename):
         print('opening from file.', end=',')
         try:
-            file = open(filename, 'rb')
+            file = open(filename, 'rb',
+                        errors='surrogateescape')
             datapickle = file.read()
             file.close()
             self.__dict__ = pickle.loads(datapickle)
