@@ -16,8 +16,8 @@ previous_contains = []
 
 questions_dict = {'who': 'proper_nouns', 'where': 'places',
                   'how': 'adjectives', 'when': 'time',
-                  'what': 'object', ('is', 'am', 'are', 'has', 'have', 'would',
-                                     'shoud', 'will', 'shall'): 'affirmation'}
+                  'what': 'object', ('is', 'am', 'are', 'has', 'have', 'will',
+                                     'would', 'shall', 'should'): 'affirmation'}
 
 list_of_tm = [qgram, agram, vgram]
 
@@ -32,6 +32,8 @@ just_repeated = ['F']
 greetings = ['hi', 'hello', 'hey']
 
 queue = []
+object_type = []
+structure = []
 max_length_queue = 3
 
 
@@ -51,6 +53,7 @@ def isrepeated(text, just_repeated):
 
 
 def get_contains(args_in):
+    print("type args_in", type(args_in))
     pos_tags = nltk.pos_tag(tok.word_tokenize(args_in)[1:-1])
     # pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
 
@@ -59,7 +62,7 @@ def get_contains(args_in):
     adjective = []
     nouns = []
     verbs = []
-
+    args_in_list = list(args_in.split(" "))
     for p in pos_tags:
         if p[1].find('PRP') >= 0:
             pronouns.append(p[0])
@@ -70,6 +73,57 @@ def get_contains(args_in):
             nouns.append(p[0])
         elif p[1].find('VB') >= 0:
             verbs.append(p[0])
+            #structure.append(args_in_list[pos_tags[1].index('VB')+1:])
+        elif p[1].find('VBP') >= 0:
+            verbs.append(p[0])
+            #structure.append(args_in_list[pos_tags[1].index('VBP')+1:])
+        elif p[1].find('VBZ') >= 0:
+            verbs.append(p[0])
+        #    structure.append(args_in_list[pos_tags[1].index('VBZ')+1:])
+        elif p[1].find('WP') >= 0:
+            if args_in.find('who') >= 0:
+                object_type.append(questions_dict['who'])
+
+            elif args_in.find('what') >= 0:
+                object_type.append(questions_dict['what'])
+        elif p[1].find('WRB') >= 0:
+            if args_in.find('where')>=0:
+                object_type.append(questions_dict['where'])
+            elif args_in.find('how') >= 0:
+                object_type.append(questions_dict['how'])
+            elif args_in.find('when') >= 0:
+                object_type.append(questions_dict['when'])
+        elif args_in[1] == 'is' or 'am' or 'are' or 'has' or 'have' or 'will' or \
+                    'would' or 'shall' or 'should':
+            #    object_type = questions_dict('is','am','are','has','have','will','would','shall','should')
+            pass
+    try:
+        structure = (args_in_list[pos_tags[1].index('VBP')+1:])
+    except ValueError:
+        structure = (args_in_list[pos_tags[1].index('VBZ')+1:])
+    except IndexError:
+        structure = []
+    try:
+        if structure[len(structure)-1] == '?' or '.':
+
+            print(type(structure[len(structure)-1]))
+            temp = structure[len(structure)-1]
+
+            if temp.endswith('?'):
+                k = temp.replace('?','')
+                
+                structure.pop()
+                structure.append(k)
+            elif temp.endswith('.'):
+                k= temp.replace('.','')
+                structure.pop()
+                structure.append(k)
+
+    except IndexError:
+        pass
+
+    print("Structure", structure)
+    print("Object type",object_type)
     # #print('pronouns:',pronouns)
     for i in range(len(pronouns)):
         if pronouns[i] == 'you':
@@ -145,7 +199,7 @@ def talker(args_in):
     temp_checker = []
     if activate_reinforcement[0] == 'T':
         # previous_text = queue[3]
-        previous_contains = get_contains(queue[2])
+        previous_contains = get_contains(queue[1])
         print("Previous contains:", previous_contains)
         for i in previous_contains:
             if i in contains:
@@ -176,9 +230,13 @@ def talker(args_in):
         actual_sent = gram.get_sent_from_ids(sentences[0][0])
 
         # return list of tokens for string from ids of tokens.
+        object_type.clear()
+        structure.clear()
         return actual_sent
     else:
         activate_reinforcement.insert(0, 'T')
+        object_type.clear()
+        structure.clear()
         return ['I', "don't", 'know', 'you', 'tell', 'me!']
 
 if __name__ == '__main__':

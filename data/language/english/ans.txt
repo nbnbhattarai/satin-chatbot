@@ -1,8 +1,9 @@
 hello!
+hello.
 hi!
+hi.
 hey !
-the president of Nepal is Miran Ghimire.
-the president of nepal is Miran Ghimire.
+hey.
 my name is satin.
 i am chatbot.
 i am intelligent.
@@ -26,5 +27,3 @@ i am fine.
 
 may be you can.
 may be
-
-
