@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 import sys
 import operator
@@ -25,6 +24,7 @@ list_of_tm = [qgram, agram, vgram]
 
 # agram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
 qgram.trainFromFile('data/language/english/questions.txt')
+
 if len(sys.argv) > 1:
     agram.trainFromFile(sys.argv[1])
 else:
@@ -32,6 +32,7 @@ else:
 
 # vgram.print_grams()
 # agram.trainFromFile('data/language/english/valveteen_rabbit.txt')
+
 tok = tokenizer.Tokenizer()
 just_repeated = ['F']
 greetings = ['hi', 'hello', 'hey']
@@ -99,8 +100,10 @@ def get_contains(args_in):
                 object_type.append(questions_dict['when'])
         elif args_in[1] == 'is' or 'am' or 'are' or 'has' or 'have' or\
                 'will' or 'would' or 'shall' or 'should':
-            # object_type = questions_dict('is','am','are','has','have','will','would','shall','should')
+            # object_type =
+            # questions_dict('is','am','are','has','have','will','would','shall','should')
             pass
+
     try:
         structure = (args_in_list[pos_tags[1].index('VBP'):])
     except ValueError:
@@ -168,9 +171,10 @@ def get_contains(args_in):
             structure[0], structure[i] = structure[i], structure[0]
         # elif k.lower() == 'it':
         #    pass
-    # print('Structure',structure[0])
-    if structure[0] == 'is' or structure == 'are':
-        structure[0], structure[1] = structure[1], structure[0]
+    if len(structure) > 0:
+        print('Structure', structure[0])
+        if structure[0] == 'is' or structure[0] == 'are':
+            structure[0], structure[1] = structure[1], structure[0]
     print("Final Structure of sentence:", structure)
     # print("Object type",object_type)
     # #print('pronouns:',pronouns)
@@ -213,7 +217,7 @@ def prompt():
             print('intext:', intext)
             # for g in greetings:
             #     if g in args:
-            #         output = greetings[random.randint(0, len(greetings)-1)]+'!'
+            # output = greetings[random.randint(0, len(greetings)-1)]+'!'
             print('satin :> ' + ' '.join(output))
 
 

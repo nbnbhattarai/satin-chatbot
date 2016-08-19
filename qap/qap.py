@@ -266,9 +266,9 @@ def main():
     #                  filename.split('.')[-1])
     # qap.print()
     # ques = 'what is <obj0> of <obj1> ?'.split()
-    # ans = 'the <obj0> of <obj1> is <obj1.obj0>'.split()
-    ans = ['<obj0.what>']
-    objs = ['earth']
+    ans = 'the <obj0> of <obj1> is <obj1.obj0>'.split()
+    # ans = ['<obj0.what>']
+    objs = ['area', 'jupitar']
     res = fill_ans_pattern(ans, objs, world)
     print(res)
 
