@@ -105,7 +105,7 @@ class nGram:
         pro_dist = [0, 3, 6]
 
         previous_words = pw[-n + 1:]
-        print('previous words:', [self.words[x] for x in previous_words])
+        # print('previous words:', [self.words[x] for x in previous_words])
         for (wt, c) in self.gram[n - 1].items():
             words_list = list(wt)
             if previous_words == words_list[:-1]:
@@ -175,7 +175,7 @@ class nGram:
                     print(self.words[j], end=',')
                 print(':', self.gram[i][k])
 
-    def sent_generate(self, out_sents, till, count, contain):
+    def sent_generate(self, out_sents, done_sents, till, count, contain):
         """
         contain = ['president', 'nepal']
         it returns list of sentences that is constructed using this ngram model
@@ -184,30 +184,39 @@ class nGram:
         constructed sentence.
         """
 
+        if till not in done_sents:
+            done_sents.append(till)
         n_words = self.get_next_word(till[:])
         # print('next words: ', [self.words[i[0]] for i in n_words])
         # print('till:', [self.words[i] for i in till])
         # print('## root_word', self.words[till[-1]])
         for w in n_words:
+            if till[:]+[w[0]] in done_sents:
+                print('break:')
+                break
             # till_tmp = till_2[:]
             if w[0] == self.words.index(tokenizer.END_TOKEN) or \
-               count > 30 or len(out_sents) > 1000:
+               count > 10 or len(out_sents) > 5:
                 # print('_END_TOKEN_')
-
+                print('till:', till)
                 contain_count = self.get_count(till[:], contain)
                 if contain_count > 0:
                     # print('sent_made :', [self.words[i] for i in till])
-                    out_sents.append((till[:], contain_count))
+                    # if w is tokenizer.END_TOKEN:
+                    if till[:] not in [x[0] for x in out_sents] and\
+                       w[0] == self.words.index(tokenizer.END_TOKEN):
+                        print('sent:', till[:], ' added -----------> !')
+                        out_sents.append((till[:], contain_count))
                 else:
-                    pass
+                    continue
                     # print('no contain')
             else:
                 # till_tmp.append(w[0])
                 # print('till_tmp:', [self.words[i] for i in till_tmp])
-                self.sent_generate(out_sents,
+                self.sent_generate(out_sents, done_sents,
                                    till[:]+[w[0]], count + 1, contain)
         else:
-            pass
+            return
             # contain_count = self.get_count(till, contain)
             # out_sents.append((till, contain_count))
             # print("I don't know what you are talking about")
