@@ -1,0 +1,16 @@
+<qap>
+<qa>
+<q>what is <obj0> ?</q>
+<a><obj0.what></a>
+<o>sun,moon,earth,jupitar,star,galaxy,supernova,universe</o>
+</qa>
+<qa>
+<q>what is in the <obj0> of <obj1> ?</q>
+<a><obj1.obj0></a>
+<o>sun, moon</o>
+</qa>
+<qa>
+<q>what is the distance between <obj0> and <obj1> ?</q>
+<a><obj0.distance_obj1></a>
+<o>sun, moon, earth</o>
+</qa>
