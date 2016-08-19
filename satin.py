@@ -153,8 +153,11 @@ def get_contains(args_in):
                 structure[0] ='are'
                 structure[0],structure[i] = structure[i],structure[0]
             structure[0],structure[i] = structure[i],structure[0]
-        elif k.lower() == 'it':
-            pass
+        #elif k.lower() == 'it':
+        #    pass
+    #print('Structure',structure[0])
+    if structure[0] == 'is' or structure == 'are':
+        structure[0],structure[1] = structure[1],structure[0]
     print("Final Structure of sentence:", structure)
     #print("Object type",object_type)
     # #print('pronouns:',pronouns)
