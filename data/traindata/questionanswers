@@ -2,7 +2,7 @@
 <qa>
 <q>what is <obj0> ?</q>
 <a><obj0.what></a>
-<o>sun,moon,earth,jupitar,star,galaxy,supernova,universe</o>
+<o>sun,moon,earth,jupiter,star,galaxy,supernova,universe</o>
 </qa>
 <qa>
 <q>what is in the <obj0> of <obj1> ?</q>
@@ -13,6 +13,10 @@
 <q>what is the <obj0> of <obj1> ?</q>
 <a>the <obj0> of <obj1> is <obj1.obj0></a>
 <o>mercury</o>
+</qa>
+<qa>
+<q>how is <obj> ?</q>
+<a><obj.how></a>
 </qa>
 <qa>
 <q>what is the distance between <obj0> and <obj1> ?</q>
