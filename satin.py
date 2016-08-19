@@ -98,9 +98,12 @@ def get_contains(args_in):
             #    object_type = questions_dict('is','am','are','has','have','will','would','shall','should')
             pass
     try:
-        structure = (args_in_list[pos_tags[1].index('VBP')+1:])
+        structure = (args_in_list[pos_tags[1].index('VBP'):])
     except ValueError:
-        structure = (args_in_list[pos_tags[1].index('VBZ')+1:])
+        try:
+            structure = (args_in_list[pos_tags[1].index('VBZ'):])
+        except:
+            structure = (args_in_list[pos_tags[1].index('VBD'):])
     except IndexError:
         structure = []
     try:
@@ -126,10 +129,20 @@ def get_contains(args_in):
     for i,k in enumerate(structure):
         if k.lower() == 'you':
             structure[i] = 'I'
+            if structure[0] == 'are':
+                structure[0] = 'am'
+                structure[0],structure[i] = structure[i],structure[0]
+            elif structure[0] == 'were':
+                structure[0] = 'was'
+                structure[0],structure[i] = structure[i],structure[0]
         elif k.lower() =='your':
             structure[i] = 'My'
+            structure.append(structure[0])
+            structure.remove(structure[0])
         elif k.lower() =='my':
             structure[i] = 'Your'
+            structure.append(structure[0])
+            structure.remove(structure[0])
         elif k.lower() =='i':
             structure[i] = 'You'
         elif k.lower() == 'it':
