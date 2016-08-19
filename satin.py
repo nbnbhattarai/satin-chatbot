@@ -171,10 +171,16 @@ def get_contains(args_in):
             structure[0], structure[i] = structure[i], structure[0]
         # elif k.lower() == 'it':
         #    pass
+
     if len(structure) > 0:
-        print('Structure', structure[0])
-        if structure[0] == 'is' or structure[0] == 'are':
-            structure[0], structure[1] = structure[1], structure[0]
+        # print('Structure',structure[0])
+        try:
+            if structure[0] == 'is' or structure == 'are':
+                structure.append(structure[0])
+                structure.remove(structure[0])
+        except IndexError:
+            pass
+
     print("Final Structure of sentence:", structure)
     # print("Object type",object_type)
     # #print('pronouns:',pronouns)
