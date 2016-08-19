@@ -111,7 +111,7 @@ def get_contains(args_in):
 
             if temp.endswith('?'):
                 k = temp.replace('?','')
-                
+
                 structure.pop()
                 structure.append(k)
             elif temp.endswith('.'):
@@ -123,7 +123,19 @@ def get_contains(args_in):
         pass
 
     print("Structure", structure)
-    print("Object type",object_type)
+    for i,k in enumerate(structure):
+        if k.lower() == 'you':
+            structure[i] = 'I'
+        elif k.lower() =='your':
+            structure[i] = 'My'
+        elif k.lower() =='my':
+            structure[i] = 'Your'
+        elif k.lower() =='i':
+            structure[i] = 'You'
+        elif k.lower() == 'it':
+            pass
+    print("Final Structure of sentence:", structure)
+    #print("Object type",object_type)
     # #print('pronouns:',pronouns)
     for i in range(len(pronouns)):
         if pronouns[i] == 'you':
@@ -131,14 +143,14 @@ def get_contains(args_in):
         elif pronouns[i] == 'your':
             pronouns[i] = 'my'
 
-    print('pronouns from function', pronouns)
-    print('nouns', nouns)
+    #print('pronouns from function', pronouns)
+    #print('nouns', nouns)
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
     contains.extend(verbs)
     contains.extend(adjective)
-    print('contains:', contains)
+    #print('contains:', contains)
     return contains
 
 
@@ -183,7 +195,7 @@ def talker(args_in):
 
     # print('pos_tag', pos_tags)
     contains = get_contains(args_in)
-    print('contains : ', contains)
+    #print('contains : ', contains)
 
     for c in contains[:]:
         if c == tokenizer.END_TOKEN or c == tokenizer.START_TOKEN:
