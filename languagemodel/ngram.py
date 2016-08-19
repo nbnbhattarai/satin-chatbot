@@ -87,7 +87,7 @@ class nGram:
         tok = tokenizer.Tokenizer()
         for s in sents:
             tokens = tok.word_tokenize(s)
-            print(tokens, 'added!')
+            #print(tokens, 'added!')
             self.add_tokens(tokens)
 
     def get_nw_ngram(self, pw, n):
@@ -105,7 +105,11 @@ class nGram:
         pro_dist = [0, 3, 6]
 
         previous_words = pw[-n + 1:]
+<<<<<<< HEAD
         # print('previous words:', [self.words[x] for x in previous_words])
+=======
+        #print('previous words:', [self.words[x] for x in previous_words])
+>>>>>>> 181abb4ba6df4270ecb441e72929d2ca4aa5c471
         for (wt, c) in self.gram[n - 1].items():
             words_list = list(wt)
             if previous_words == words_list[:-1]:

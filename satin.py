@@ -1,3 +1,4 @@
+
 #!/usr/bin/python
 import sys
 import operator
@@ -16,8 +17,8 @@ previous_contains = []
 
 questions_dict = {'who': 'proper_nouns', 'where': 'places',
                   'how': 'adjectives', 'when': 'time',
-                  'what': 'object', ('is', 'am', 'are', 'has', 'have', 'would',
-                                     'shoud', 'will', 'shall'): 'affirmation'}
+                  'what': 'object', ('is', 'am', 'are', 'has', 'have', 'will',
+                                     'would', 'shall', 'should'): 'affirmation'}
 
 list_of_tm = [qgram, agram, vgram]
 
@@ -36,6 +37,8 @@ just_repeated = ['F']
 greetings = ['hi', 'hello', 'hey']
 
 queue = []
+object_type = []
+structure = []
 max_length_queue = 3
 
 
@@ -55,6 +58,7 @@ def isrepeated(text, just_repeated):
 
 
 def get_contains(args_in):
+    print("type args_in", type(args_in))
     pos_tags = nltk.pos_tag(tok.word_tokenize(args_in)[1:-1])
     # pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
 
@@ -63,7 +67,7 @@ def get_contains(args_in):
     adjective = []
     nouns = []
     verbs = []
-
+    args_in_list = list(args_in.split(" "))
     for p in pos_tags:
         if p[1].find('PRP') >= 0:
             pronouns.append(p[0])
@@ -74,6 +78,102 @@ def get_contains(args_in):
             nouns.append(p[0])
         elif p[1].find('VB') >= 0:
             verbs.append(p[0])
+            #structure.append(args_in_list[pos_tags[1].index('VB')+1:])
+        elif p[1].find('VBP') >= 0:
+            verbs.append(p[0])
+            #structure.append(args_in_list[pos_tags[1].index('VBP')+1:])
+        elif p[1].find('VBZ') >= 0:
+            verbs.append(p[0])
+        #    structure.append(args_in_list[pos_tags[1].index('VBZ')+1:])
+        elif p[1].find('WP') >= 0:
+            if args_in.find('who') >= 0:
+                object_type.append(questions_dict['who'])
+
+            elif args_in.find('what') >= 0:
+                object_type.append(questions_dict['what'])
+        elif p[1].find('WRB') >= 0:
+            if args_in.find('where')>=0:
+                object_type.append(questions_dict['where'])
+            elif args_in.find('how') >= 0:
+                object_type.append(questions_dict['how'])
+            elif args_in.find('when') >= 0:
+                object_type.append(questions_dict['when'])
+        elif args_in[1] == 'is' or 'am' or 'are' or 'has' or 'have' or 'will' or \
+                    'would' or 'shall' or 'should':
+            #    object_type = questions_dict('is','am','are','has','have','will','would','shall','should')
+            pass
+    try:
+        structure = (args_in_list[pos_tags[1].index('VBP'):])
+    except ValueError:
+        try:
+            structure = (args_in_list[pos_tags[1].index('VBZ'):])
+        except:
+            try:
+                structure = (args_in_list[pos_tags[1].index('VBD'):])
+            except:
+                try:
+                    structure = (args_in_list[pos_tags[1].index('MD'):])
+                except:
+                    try:
+                        structure = (args_in_list[pos_tags[1].index('VB'):])
+                    except:
+                        structure = (args_in_list[pos_tags[0].index('MD')-1:])
+                        print("S: ",structure, pos_tags[0].index('MD'))
+    except IndexError:
+        structure = []
+
+
+    try:
+        if structure[len(structure)-1] == '?' or '.':
+
+            print(type(structure[len(structure)-1]))
+            temp = structure[len(structure)-1]
+
+            if temp.endswith('?'):
+                k = temp.replace('?','')
+
+                structure.pop()
+                structure.append(k)
+            elif temp.endswith('.'):
+                k= temp.replace('.','')
+                structure.pop()
+                structure.append(k)
+
+    except IndexError:
+        pass
+
+    print("Structure", structure)
+    for i,k in enumerate(structure):
+        if k.lower() == 'you':
+            structure[i] = 'I'
+            if structure[0] == 'are':
+                structure[0] = 'am'
+                #structure[0],structure[i] = structure[i],structure[0]
+            elif structure[0] == 'were':
+                structure[0] = 'was'
+                #structure[0],structure[i] = structure[i],structure[0]
+            structure[0],structure[i] = structure[i],structure[0]
+        elif k.lower() =='your':
+            structure[i] = 'My'
+            structure.append(structure[0])
+            structure.remove(structure[0])
+        elif k.lower() =='my':
+            structure[i] = 'Your'
+            structure.append(structure[0])
+            structure.remove(structure[0])
+        elif k.lower() =='i':
+            structure[i] = 'You'
+            if structure[0] == 'am':
+                structure[0] ='are'
+                structure[0],structure[i] = structure[i],structure[0]
+            structure[0],structure[i] = structure[i],structure[0]
+        #elif k.lower() == 'it':
+        #    pass
+    #print('Structure',structure[0])
+    if structure[0] == 'is' or structure == 'are':
+        structure[0],structure[1] = structure[1],structure[0]
+    print("Final Structure of sentence:", structure)
+    #print("Object type",object_type)
     # #print('pronouns:',pronouns)
     for i in range(len(pronouns)):
         if pronouns[i] == 'you':
@@ -81,8 +181,8 @@ def get_contains(args_in):
         elif pronouns[i] == 'your':
             pronouns[i] = 'my'
 
-    print('pronouns from function', pronouns)
-    print('nouns', nouns)
+    #print('pronouns from function', pronouns)
+    #print('nouns', nouns)
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
@@ -134,7 +234,7 @@ def talker(args_in):
 
     # print('pos_tag', pos_tags)
     contains = get_contains(args_in)
-    print('contains : ', contains)
+    #print('contains : ', contains)
 
     for c in contains[:]:
         if c == tokenizer.END_TOKEN or c == tokenizer.START_TOKEN:
@@ -150,7 +250,7 @@ def talker(args_in):
     temp_checker = []
     if activate_reinforcement[0] == 'T':
         # previous_text = queue[3]
-        previous_contains = get_contains(queue[2])
+        previous_contains = get_contains(queue[1])
         print("Previous contains:", previous_contains)
         for i in previous_contains:
             if i in contains:
@@ -185,9 +285,13 @@ def talker(args_in):
         # actual_sent = gram.get_sent_from_ids(sentences[
 
         # return list of tokens for string from ids of tokens.
+        object_type.clear()
+        structure.clear()
         return actual_sent
     else:
         activate_reinforcement.insert(0, 'T')
+        object_type.clear()
+        structure.clear()
         return ['I', "don't", 'know', 'you', 'tell', 'me!']
 
 if __name__ == '__main__':
