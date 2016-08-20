@@ -1,4 +1,14 @@
 <obj>
+name = i
+isclass = False
+<attr>
+name = satin
+age = 18
+gender = female
+address = computer
+</attr>
+</obj>
+<obj>
 name = star
 isclass = True
 <attr>

@@ -67,15 +67,22 @@ def interpreat_qa(q, a):
 
 
 def interpreat_q(q):
-    pq = nltk.pos_tag(q, tagset='universal')
+    pq = nltk.pos_tag(q)
     objs = []
     pq_result = []
     i = 0
     for q in pq:
-        if q[1] == 'NOUN':
+        if q[1] == 'NN':
             pq_result.append('<obj' + str(i) + '>')
             objs.append(q[0])
             i = i + 1
+        # elif 'PRP' in q[1]:
+        #     temp_o = q[0]
+        #     if q[0] == 'your' or q[0] == 'you':
+        #         temp_o = 'i'
+        #     objs.append(temp_o)
+        #     pq_result.append('<obj' + str(i) + '>')
+        #     i = i + 1
         else:
             pq_result.append(q[0])
     return [pq_result, objs]
@@ -263,10 +270,10 @@ def main():
     # ques = 'what is <obj0> of <obj1> ?'.split()
     ques = 'what is the gravity of mercury ?'.split()
     # ans = 'the <obj0> of <obj1> is <obj1.obj0>'.split()
-    # ans = ['<obj0.what>']
-    # objs = ['area', 'jupitar']
-    # res = fill_ans_pattern(ans, objs, world)
-    res = qap.get_answer_from_question(ques)
+    ans = ['<obj0.obj1>']
+    objs = ['i', 'name']
+    res = fill_ans_pattern(ans, objs, world)
+    # res = qap.get_answer_from_question(ques)
     if len(res) > 0:
         print(res)
     else:

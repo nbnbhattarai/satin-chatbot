@@ -1,6 +1,12 @@
 <qap>
 
 <qa>
+<q>what is <obj0> <obj1> ?</q>
+<a>my <obj1> is <obj0.obj1> .</a>
+<o>i</o>
+</qa>
+
+<qa>
 <q>what is <obj0> ?</q>
 <a><obj0.what></a>
 <o>sun,moon,earth,jupiter,star,galaxy,supernova,universe</o>
