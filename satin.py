@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 import sys
 import operator
@@ -7,11 +6,17 @@ import nltk
 import re
 import random
 import languagemodel
-
+import qap
 
 qgram = languagemodel.nGram()
 agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
+worldmodel = qap.World()
+worldmodel.read_readable('./data/traindata/objects')
+qap = qap.QAP()
+qap.load_from_file('./data/traindata/questionanswers')
+qap.worldmodel = worldmodel
+
 activate_reinforcement = ['F']
 previous_contains = []
 
@@ -25,6 +30,7 @@ list_of_tm = [qgram, agram, vgram]
 
 # agram.trainFromFile('data/language/english/stephen_hawking_a_brief_history_of_time.txt')
 qgram.trainFromFile('data/language/english/questions.txt')
+
 if len(sys.argv) > 1:
     agram.trainFromFile(sys.argv[1])
 else:
@@ -32,6 +38,7 @@ else:
 
 # vgram.print_grams()
 # agram.trainFromFile('data/language/english/valveteen_rabbit.txt')
+
 tok = tokenizer.Tokenizer()
 just_repeated = ['F']
 greetings = ['hi', 'hello', 'hey']
@@ -99,8 +106,10 @@ def get_contains(args_in):
                 object_type.append(questions_dict['when'])
         elif args_in[1] == 'is' or 'am' or 'are' or 'has' or 'have' or\
                 'will' or 'would' or 'shall' or 'should':
-            # object_type = questions_dict('is','am','are','has','have','will','would','shall','should')
+            # object_type =
+            # questions_dict('is','am','are','has','have','will','would','shall','should')
             pass
+
     try:
         structure = (args_in_list[pos_tags[1].index('VBP'):])
     except ValueError:
@@ -169,13 +178,14 @@ def get_contains(args_in):
         # elif k.lower() == 'it':
         #    pass
 
-    #print('Structure',structure[0])
-    try:
-        if structure[0] == 'is' or structure == 'are':
-            structure.append(structure[0])
-            structure.remove(structure[0])
-    except IndexError:
-        pass
+    if len(structure) > 0:
+        # print('Structure',structure[0])
+        try:
+            if structure[0] == 'is' or structure == 'are':
+                structure.append(structure[0])
+                structure.remove(structure[0])
+        except IndexError:
+            pass
 
     print("Final Structure of sentence:", structure)
     # print("Object type",object_type)
@@ -221,7 +231,7 @@ def prompt():
             print('intext:', intext)
             # for g in greetings:
             #     if g in args:
-            #         output = greetings[random.randint(0, len(greetings)-1)]+'!'
+            # output = greetings[random.randint(0, len(greetings)-1)]+'!'
             print('satin :> ' + ' '.join(output))
 
 
@@ -240,6 +250,10 @@ def talker(args_in):
     # pos_tags=nltk.pos_tag(nltk.word_tokenize(args_in), tagset = 'universal')
 
     # print('pos_tag', pos_tags)
+
+    from_qap = qap.get_answer_from_question(nltk.word_tokenize(args_in))
+    if len(from_qap) > 0:
+        return from_qap
     contains = get_contains(args_in)
     # print('contains : ', contains)
 

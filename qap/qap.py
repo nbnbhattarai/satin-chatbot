@@ -67,15 +67,22 @@ def interpreat_qa(q, a):
 
 
 def interpreat_q(q):
-    pq = nltk.pos_tag(q, tagset='universal')
+    pq = nltk.pos_tag(q)
     objs = []
     pq_result = []
     i = 0
     for q in pq:
-        if q[1] == 'NOUN':
+        if q[1] == 'NN':
             pq_result.append('<obj' + str(i) + '>')
             objs.append(q[0])
             i = i + 1
+        # elif 'PRP' in q[1]:
+        #     temp_o = q[0]
+        #     if q[0] == 'your' or q[0] == 'you':
+        #         temp_o = 'i'
+        #     objs.append(temp_o)
+        #     pq_result.append('<obj' + str(i) + '>')
+        #     i = i + 1
         else:
             pq_result.append(q[0])
     return [pq_result, objs]
@@ -90,7 +97,6 @@ def fill_ans_pattern(a, objs, world):
     property of name of obj at index 1
     for <obj1.name> it returns ('obj', '1', 'name', '')
     """
-    obj_prop = []
     result = []
     for k in range(len(a)):
         print(a[k])
@@ -127,7 +133,7 @@ def fill_ans_pattern(a, objs, world):
                         if prop_text in obj.informations.keys():
                             result.append(obj.informations[prop_text])
                         else:
-                            result.append(", i don't know")
+                            return []
                 else:
                     result.append(objname)
         else:
@@ -166,35 +172,30 @@ class QAP:
 
     def get_answer_from_question(self, q):
         q_pattern, objs = interpreat_q(q)
+        print('q', q_pattern, 'o:', objs)
         ans = []
         for qa in self.qas:
-            print(qa, q_pattern)
-            if list(qa[0]) == q_pattern:
+            # print(qa[0].split(), q_pattern)
+            if qa[0].split() == q_pattern:
                 print('matched')
-                ans.append((qa[1], qa[2]))
+                ans.append(qa[1].split())
+        print('ans:', ans, 'objs:', objs)
         if len(ans) == 1:
-            return ans[0]
+            return fill_ans_pattern(ans[0], objs, self.worldmodel)
         elif len(ans) == 0:
-            return get_default_ans(q_pattern)
+            return []           # empty returns means get answer from ngram
         else:
-            true_ans = []
-            for a in ans:
-                if sorted(a[1]) == sorted(objs):
-                    true_ans.append(a[0])
-            breaker_counter = 0
-            while breaker_counter < 100:
-                ans_r = ans[random.randint(0, len(ans) - 1)]
-                count = 0
-                for k in ans_r:
-                    if '<obj' in k:
-                        count = count + 1
-                if len(objs) == count:
-                    break
-                breaker_counter = breaker_counter + 1
-            for i in range(len(ans_r)):
-                if '<obj' in ans_r[i]:
-                    ans_r[i] = objs[i]
-            return ans_r
+            true_ans = ans
+            # for a in ans:
+            #     ind_count_list = re.findall(r'< obj([0-9]+)>', a[1])
+            #     ind_count = len(set(ind_count_list))
+            #     if ind_count <= len(objs):
+            #         true_ans.append(a)
+            # if len(true_ans) == 0:
+            #     return []
+            rand_int = random.randint(0, len(true_ans) - 1)
+            return fill_ans_pattern(true_ans[rand_int],
+                                    objs, self.worldmodel)
 
     def print(self):
         for qa in self.qas:
@@ -261,16 +262,22 @@ def main():
     if len(sys.argv) > 1:
         filename = sys.argv[1]
     qap = QAP()
+    qap.worldmodel = world
     qap.load_from_file(filename)
     # qap.save_to_file(' '.join(filename.split('.')[:-1]) + '_test.' +
     #                  filename.split('.')[-1])
     # qap.print()
     # ques = 'what is <obj0> of <obj1> ?'.split()
+    ques = 'what is the gravity of mercury ?'.split()
     # ans = 'the <obj0> of <obj1> is <obj1.obj0>'.split()
-    ans = ['<obj0.what>']
-    objs = ['earth']
+    ans = ['<obj0.obj1>']
+    objs = ['i', 'name']
     res = fill_ans_pattern(ans, objs, world)
-    print(res)
+    # res = qap.get_answer_from_question(ques)
+    if len(res) > 0:
+        print(res)
+    else:
+        print('no result from qap.')
 
 if __name__ == '__main__':
     main()

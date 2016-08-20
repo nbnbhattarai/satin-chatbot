@@ -1,25 +1,55 @@
 <qap>
+
+<qa>
+<q>what is <obj0> <obj1> ?</q>
+<a>my <obj1> is <obj0.obj1> .</a>
+<o>i</o>
+</qa>
+
 <qa>
 <q>what is <obj0> ?</q>
 <a><obj0.what></a>
 <o>sun,moon,earth,jupiter,star,galaxy,supernova,universe</o>
 </qa>
+
+<qa>
+<q>can you tell me about <obj0> ?</q>
+<a>yes ofcourse !, <obj0.what></a>
+<o>sun,moon,earth,jupiter,star,galaxy,supernova,universe</o>
+</qa>
+
+<qa>
+<q>what do you know about <obj0> ?</q>
+<a>i don't know much but, <obj0.what></a>
+<o>sun,moon,earth,jupiter,star,galaxy,supernova,universe</o>
+</qa>
+
 <qa>
 <q>what is in the <obj0> of <obj1> ?</q>
 <a><obj1.obj0></a>
 <o>sun, moon</o>
 </qa>
+
 <qa>
 <q>what is the <obj0> of <obj1> ?</q>
 <a>the <obj0> of <obj1> is <obj1.obj0></a>
 <o>mercury</o>
 </qa>
+
+<qa>
+<q>what is the <obj0> of <obj1> ?</q>
+<a>based on my knowledge, the <obj0> of <obj1> is <obj1.obj0></a>
+<o>mercury</o>
+</qa>
+
 <qa>
 <q>how is <obj> ?</q>
 <a><obj.how></a>
 </qa>
+
 <qa>
 <q>what is the distance between <obj0> and <obj1> ?</q>
 <a><obj0.distance_obj1></a>
 <o>sun, moon, earth</o>
 </qa>
+
