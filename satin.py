@@ -6,11 +6,17 @@ import nltk
 import re
 import random
 import languagemodel
-
+import qap
 
 qgram = languagemodel.nGram()
 agram = languagemodel.nGram()
 vgram = languagemodel.nGram()
+worldmodel = qap.World()
+worldmodel.read_readable('./data/traindata/objects')
+qap = qap.QAP()
+qap.load_from_file('./data/traindata/questionanswers')
+qap.worldmodel = worldmodel
+
 activate_reinforcement = ['F']
 previous_contains = []
 
@@ -242,6 +248,10 @@ def talker(args_in):
     # pos_tags=nltk.pos_tag(nltk.word_tokenize(args_in), tagset = 'universal')
 
     # print('pos_tag', pos_tags)
+
+    from_qap = qap.get_answer_from_question(nltk.word_tokenize(args_in))
+    if len(from_qap) > 0:
+        return from_qap
     contains = get_contains(args_in)
     # print('contains : ', contains)
 
