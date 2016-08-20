@@ -191,8 +191,10 @@ def get_contains(args_in):
     contains = []
     contains.extend(nouns)
     contains.extend(pronouns)
-    contains.extend(verbs)
-    contains.extend(adjective)
+    # contains.extend(verbs)
+    # contains.extend(adjective)
+
+    #contains = structure
     print('contains:', contains)
     return list(set(contains))
 

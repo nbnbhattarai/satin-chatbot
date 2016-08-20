@@ -18,6 +18,9 @@ the president of usa is barak obama.
 the president of USA is barak obama.
 the president of america is barack obama.
 the president of America is barak obama.
+Light is a form of energy.
+
+Your car is at shop.
 
 i am fine.
 how are you ?
@@ -32,3 +35,5 @@ may be .
 
 sun is a star.
 sun is very hot.
+
+how are you?
