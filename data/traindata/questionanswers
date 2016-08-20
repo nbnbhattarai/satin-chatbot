@@ -15,6 +15,11 @@
 <o>mercury</o>
 </qa>
 <qa>
+<q>what is the <obj0> of <obj1> ?</q>
+<a>based on my knowledge, the <obj0> of <obj1> is <obj1.obj0></a>
+<o>mercury</o>
+</qa>
+<qa>
 <q>how is <obj> ?</q>
 <a><obj.how></a>
 </qa>
@@ -23,3 +28,4 @@
 <a><obj0.distance_obj1></a>
 <o>sun, moon, earth</o>
 </qa>
+
