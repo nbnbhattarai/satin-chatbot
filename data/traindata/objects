@@ -59,7 +59,7 @@ what =
 </obj>
 
 <obj>
-name = Jupiter
+name = jupiter
 isclass = False
 class = planet;sun
 <attr>
