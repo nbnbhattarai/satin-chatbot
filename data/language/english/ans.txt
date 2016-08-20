@@ -2,33 +2,22 @@ hello!
 hello.
 hi!
 hi.
-hey !
+hey!
 hey.
 my name is satin.
 i am chatbot.
 i am intelligent.
-i was programmed by dr.x.
 i can do everything.
 i am from computer.
 i don't know you.
-
 the president of nepal is biddhya devi bhandari.
-
-the president of usa is barak obama.
 the president of USA is barak obama.
 the president of america is barack obama.
-the president of America is barak obama.
-
 i am fine.
-how are you ?
-
-
+how are you?
 i am fine.
-
 may be you can.
-<<<<<<< HEAD
-may be .
-
-
+may be.
 sun is a star.
-sun is very hot.
+who are you ?
+i can do everything.

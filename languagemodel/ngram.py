@@ -87,7 +87,7 @@ class nGram:
         tok = tokenizer.Tokenizer()
         for s in sents:
             tokens = tok.word_tokenize(s)
-            #print(tokens, 'added!')
+            # print(tokens, 'added!')
             self.add_tokens(tokens)
 
     def get_nw_ngram(self, pw, n):
@@ -102,7 +102,7 @@ class nGram:
             return []
         # add these count to the next word's probability
         # increase probability if next word is found by higher grams.
-        pro_dist = [0, 3, 6]
+        # pro_dist = [0, 3, 6]
 
         previous_words = pw[-n + 1:]
         # print('previous words:', [self.words[x] for x in previous_words])
@@ -110,10 +110,16 @@ class nGram:
             words_list = list(wt)
             if previous_words == words_list[:-1]:
                 # save next word with probability as tuple
-                next_words.append((words_list[-1], c + pro_dist[n - 2]))
+                n_w = words_list[-1]
+                # if n_w in self.gram[0].keys():
+                probab = float(c) / float(self.gram[0][(n_w,)])
+                # print('type prob:', type(probab))
+                # print('probab : ', probab)
+                next_words.append((n_w, probab))
+        next_words = list(set(next_words))
         next_words = sorted(next_words, key=operator.itemgetter(1),
                             reverse=True)
-        return next_words[:5]   # return list of (word,prob) tuple
+        return next_words[:4]   # return list of (word,prob) tuple
 
     def prob(self, word_list):
         """
@@ -198,15 +204,17 @@ class nGram:
             if w[0] == self.words.index(tokenizer.END_TOKEN) or \
                count > 10 or len(out_sents) > 5:
                 # print('_END_TOKEN_')
-                print('till:', till)
+                # print('till:', till)
                 contain_count = self.get_count(till[:], contain)
                 if contain_count > 0:
                     # print('sent_made :', [self.words[i] for i in till])
                     # if w is tokenizer.END_TOKEN:
                     if till[:] not in [x[0] for x in out_sents] and\
                        w[0] == self.words.index(tokenizer.END_TOKEN):
-                        print('sent:', till[:], ' added -----------> !')
+                        print('sent:', self.get_sent_from_ids(
+                            till[:]), ' added -----------> !')
                         out_sents.append((till[:], contain_count))
+                        return
                 else:
                     continue
                     # print('no contain')
