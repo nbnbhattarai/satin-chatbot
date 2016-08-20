@@ -125,8 +125,11 @@ def get_contains(args_in):
                     try:
                         structure = (args_in_list[pos_tags[1].index('VB'):])
                     except:
-                        structure = (
-                            args_in_list[pos_tags[0].index('MD') - 1:])
+                        try:
+                            structure = (
+                                args_in_list[pos_tags[0].index('MD') - 1:])
+                        except:
+                            pass
                         print("S: ", structure, pos_tags[0].index('MD'))
     except IndexError:
         structure = []
