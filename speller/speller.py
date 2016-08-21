@@ -2,17 +2,18 @@ import sys
 import dictionary
 from collections import Counter
 
+
 class Speller:
+
     def __init__(self):
         dictionary = dictionary.Dictionary()
         WORDS = Counter(dictionary.words)
 
-    def prob(word):
+    def prob(self, word):
         """Returns probability of occurence a word in the dictionary."""
         return WORDS[word] / sum(WORDS.values())
 
-
-    def edits1(word):
+    def edits1(self, word):
         """Returns a set of possible word combinations whose edit distance = 1"""
         letters = 'abcdefghijklmnopqrstuvwxyz'
         splits = [(word[:i], word[i:]) for i in range(len(word) + 1)]
@@ -22,26 +23,23 @@ class Speller:
         inserts = [L + c + R for L, R in splits for c in letters]
         return set(deletes + transposes + replaces + inserts)
 
-
-    def edits2(word):
+    def edits2(self, word):
         """Returns a set of possible word combinations whose edit distance = 2"""
         return set(e2 for e1 in edits1(word) for e2 in edits1(e1) if e2 in WORDS)
 
-
-    def known(words):
+    def known(self, words):
         """Returns only those words from given words that
         exist in the dictionary"""
         return [w for w in words if w in WORDS]
-
 
     def spell_correct_word(word):
         """
         This function takes a word as input and returns
         the probable corrected word.
         """
-        probable = known([word]) or known(edits1(word)) or edits2(word) or [word]
+        probable = known([word]) or known(
+            edits1(word)) or edits2(word) or [word]
         return max(probable, key=prob)
-
 
     def spell_correct_sent(sent, dictionary, language_model):
         """

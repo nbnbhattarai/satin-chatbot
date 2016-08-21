@@ -63,7 +63,7 @@ class nGram:
             print("[ error ]")
 
     def open_from_file(self, filename):
-        print("Opening from file.")
+        print("Opening NGram database from file " + filename + ' ', end='')
         try:
             file = open(filename, 'rb')
             datapickle = file.read()
@@ -75,20 +75,26 @@ class nGram:
 
     def trainFromFile(self, filename):
         self.filename = filename
-        file = open(filename, 'r', encoding='ascii', errors='surrogateescape')
-        text_data = file.read().lower()
-        # let's replace newline char with white space
-        text_data = text_data.replace('\n', ' ')
-        # let's tokenize sentences from text_data.
-        # I use sent_tokenize nltk function to tokenize the sentences.
-        sents = sent_tokenize(text_data)
-        # let's iterate over sentences and tokenize words and update
-        # n-gram data
-        tok = tokenizer.Tokenizer()
-        for s in sents:
-            tokens = tok.word_tokenize(s)
-            # print(tokens, 'added!')
-            self.add_tokens(tokens)
+        print("Training NGram from file " + filename, end=' .')
+        try:
+            file = open(filename, 'r', encoding='ascii',
+                        errors='surrogateescape')
+            text_data = file.read().lower()
+            # let's replace newline char with white space
+            text_data = text_data.replace('\n', ' ')
+            # let's tokenize sentences from text_data.
+            # I use sent_tokenize nltk function to tokenize the sentences.
+            sents = sent_tokenize(text_data)
+            # let's iterate over sentences and tokenize words and update
+            # n-gram data
+            tok = tokenizer.Tokenizer()
+            for s in sents:
+                tokens = tok.word_tokenize(s)
+                # print(tokens, 'added!')
+                self.add_tokens(tokens)
+            print(' [ done ]')
+        except FileNotFoundError:
+            print(' [ error ]')
 
     def get_nw_ngram(self, pw, n):
         """
@@ -112,14 +118,15 @@ class nGram:
                 # save next word with probability as tuple
                 n_w = words_list[-1]
                 # if n_w in self.gram[0].keys():
-                probab = float(c) / float(self.gram[0][(n_w,)])
+                # probab = float(c) / float(self.gram[0][(n_w,)])
+                probab = c
                 # print('type prob:', type(probab))
                 # print('probab : ', probab)
                 next_words.append((n_w, probab))
         next_words = list(set(next_words))
         next_words = sorted(next_words, key=operator.itemgetter(1),
                             reverse=True)
-        return next_words[:4]   # return list of (word,prob) tuple
+        return next_words[:]   # return list of (word,prob) tuple
 
     def prob(self, word_list):
         """
@@ -146,7 +153,7 @@ class nGram:
         word_list = self.prob(word_list)
         word_list = sorted(word_list, key=operator.itemgetter(1),
                            reverse=True)
-        return word_list[:10]
+        return word_list[:]
 
     def get_count(self, sents, conts):
         count = 0
@@ -197,12 +204,9 @@ class nGram:
         # print('till:', [self.words[i] for i in till])
         # print('## root_word', self.words[till[-1]])
         for w in n_words:
-            if till[:] + [w[0]] in done_sents:
-                print('break:')
-                break
             # till_tmp = till_2[:]
             if w[0] == self.words.index(tokenizer.END_TOKEN) or \
-               count > 10 or len(out_sents) > 5:
+               count > 10 or len(out_sents) > 100:
                 # print('_END_TOKEN_')
                 # print('till:', till)
                 contain_count = self.get_count(till[:], contain)
@@ -211,10 +215,10 @@ class nGram:
                     # if w is tokenizer.END_TOKEN:
                     if till[:] not in [x[0] for x in out_sents] and\
                        w[0] == self.words.index(tokenizer.END_TOKEN):
-                        print('sent:', self.get_sent_from_ids(
-                            till[:]), ' added -----------> !')
+                        # print('sent:', self.get_sent_from_ids(
+                            # till[:]), ' added -----------> !')
                         out_sents.append((till[:], contain_count))
-                        return
+                        # return
                 else:
                     continue
                     # print('no contain')
@@ -224,7 +228,7 @@ class nGram:
                 self.sent_generate(out_sents, done_sents,
                                    till[:] + [w[0]], count + 1, contain)
         else:
-            return
+            pass
             # contain_count = self.get_count(till, contain)
             # out_sents.append((till, contain_count))
             # print("I don't know what you are talking about")

@@ -65,11 +65,11 @@ def isrepeated(text, just_repeated):
 
 
 def get_contains(args_in):
-    print("type args_in", type(args_in))
+    # print("type args_in", type(args_in))
     pos_tags = nltk.pos_tag(tok.word_tokenize(args_in)[1:-1])
     # pos_tags = nltk.pos_tag(nltk.word_tokenize(args_in), tagset='universal')
 
-    print('pos_tag from function', pos_tags)
+    # print('pos_tag from function', pos_tags)
     pronouns = []
     adjective = []
     nouns = []
@@ -81,7 +81,7 @@ def get_contains(args_in):
         elif p[1].find('JJ') >= 0:
             adjective.append(p[0])
         elif p[1].find('NN') >= 0:
-            print('noun', p[0], 'added')
+            # print('noun', p[0], 'added')
             nouns.append(p[0])
         elif p[1].find('VB') >= 0:
             verbs.append(p[0])
@@ -130,14 +130,14 @@ def get_contains(args_in):
                                 args_in_list[pos_tags[0].index('MD') - 1:])
                         except:
                             pass
-                        print("S: ", structure, pos_tags[0].index('MD'))
+                        # print("S: ", structure, pos_tags[0].index('MD'))
     except IndexError:
         structure = []
 
     try:
         if structure[len(structure) - 1] == '?' or '.':
 
-            print(type(structure[len(structure) - 1]))
+            # print(type(structure[len(structure) - 1]))
             temp = structure[len(structure) - 1]
 
             if temp.endswith('?'):
@@ -153,7 +153,7 @@ def get_contains(args_in):
     except IndexError:
         pass
 
-    print("Structure", structure)
+    # print("Structure", structure)
     for i, k in enumerate(structure):
         if k.lower() == 'you':
             structure[i] = 'I'
@@ -190,7 +190,7 @@ def get_contains(args_in):
         except IndexError:
             pass
 
-    print("Final Structure of sentence:", structure)
+    # print("Final Structure of sentence:", structure)
     # print("Object type",object_type)
     # #print('pronouns:',pronouns)
     for i in range(len(pronouns)):
@@ -205,10 +205,10 @@ def get_contains(args_in):
     contains.extend(nouns)
     contains.extend(pronouns)
     # contains.extend(verbs)
-    # contains.extend(adjective)
+    contains.extend(adjective)
 
-    #contains = structure
-    print('contains:', contains)
+    contains = structure
+    # print('contains:', contains)
     return list(set(contains))
 
 
@@ -231,7 +231,7 @@ def prompt():
                 just_repeated.insert(0, 'F')
 
             output = talker(intext)
-            print('intext:', intext)
+            # print('intext:', intext)
             # for g in greetings:
             #     if g in args:
             # output = greetings[random.randint(0, len(greetings)-1)]+'!'
@@ -244,7 +244,7 @@ def talker(args_in):
     to user.
     """
     gram = languagemodel.nGram()
-    if (args_in[len(args_in) - 1]) == '.':
+    if args_in[- 1] == '.':
         gram = qgram
     else:
         gram = agram
@@ -314,7 +314,7 @@ def talker(args_in):
         structure.clear()
         return actual_sent
     else:
-        activate_reinforcement.insert(0, 'T')
+        activate_reinforcement.insert(0, 'F')
         object_type.clear()
         structure.clear()
         return ['I', "don't", 'know', 'you', 'tell', 'me!']

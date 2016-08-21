@@ -92,7 +92,7 @@ class World:
                 if cl in self.classobjects.keys():
                     if obj.name not in self.classobjects[cl]:
                         self.classobjects[cl] = self.classobjects[cl] +\
-                                                [obj.name]
+                            [obj.name]
                 else:
                     self.classobjects[cl] = [obj.name]
 
@@ -122,7 +122,7 @@ class World:
         """
         Read readable file in defined format.
         """
-        print('opening from file.', end='')
+        print('opening worldmodel from file.' + filename, end='. ')
         try:
             file = open(filename, 'r',
                         errors='surrogateescape')

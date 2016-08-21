@@ -43,7 +43,7 @@ def interpreat_qa(q, a):
             ques = k
             break
 
-    print('ques:', ques)
+    # print('ques:', ques)x
 
     for a in pq:
         if 'NN' in a[1]:
@@ -62,7 +62,7 @@ def interpreat_qa(q, a):
             pa_res.append('<obj' + str(j) + '>')
         else:
             pa_res.append(a[0])
-    print('answer:', answer)
+    # print('answer:', answer)
     return [pq_res, pa_res, objs]
 
 
@@ -99,7 +99,7 @@ def fill_ans_pattern(a, objs, world):
     """
     result = []
     for k in range(len(a)):
-        print(a[k])
+        # print(a[k])
         if '<obj' in a[k]:      # filter token with obj or nonobj.
             r = re.findall(
                 re.compile("(\{([^}]+)\})?<(\D+)(\d+)(.(\D+)(\d+)?)?>"),
@@ -107,26 +107,26 @@ def fill_ans_pattern(a, objs, world):
             # r[0]
             # r = re.findall("<(.*?)([0-9]+)*\.(.*?)([0-9]+)*>",
             #                a[k])
-            print(r)
+            # print(r)
             if len(r) > 0:
                 r = r[0]
                 classname = r[1]
                 first_id = int(r[3])
-                print('f:', first_id)
+                # print('f:', first_id)
                 if len(classname) > 0:
                     objname = classname + '_' + objs[first_id]
                 else:
                     objname = objs[first_id]
-                print('objname:', objname)
+                # print('objname:', objname)
                 prop_text = ''
                 if len(r[6]) == 0:
                     if len(r[5]) > 0:
                         prop_text = r[5]
                 else:
                     second_id = int(r[6])
-                    print('s:', second_id)
+                    # print('s:', second_id)
                     prop_text = objs[second_id]
-                print('prop_text:', prop_text)
+                # print('prop_text:', prop_text)
                 if len(prop_text) > 0:
                     if objname in world.objects.keys():
                         obj = world.objects[objname]
@@ -172,14 +172,14 @@ class QAP:
 
     def get_answer_from_question(self, q):
         q_pattern, objs = interpreat_q(q)
-        print('q', q_pattern, 'o:', objs)
+        # print('q', q_pattern, 'o:', objs)
         ans = []
         for qa in self.qas:
             # print(qa[0].split(), q_pattern)
             if qa[0].split() == q_pattern:
-                print('matched')
+                # print('matched')
                 ans.append(qa[1].split())
-        print('ans:', ans, 'objs:', objs)
+        # print('ans:', ans, 'objs:', objs)
         if len(ans) == 1:
             return fill_ans_pattern(ans[0], objs, self.worldmodel)
         elif len(ans) == 0:
@@ -277,7 +277,8 @@ def main():
     if len(res) > 0:
         print(res)
     else:
-        print('no result from qap.')
+        pass
+        # print('no result from qap.')
 
 if __name__ == '__main__':
     main()
