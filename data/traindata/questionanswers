@@ -1,5 +1,59 @@
 <qap>
 
+
+<qa>
+<q>how are you </q>
+<a>i am fine, thank you !</a>
+</qa>
+
+<qa>
+<q>how are you </q>
+<a>i am good, what about you ?</a>
+</qa>
+
+
+<qa>
+<q>i am fine !</q>
+<a>that's very good !</a>
+</qa>
+
+<qa>
+<q>what is your name ?</q>
+<a>don't you know my name ?</a>
+</qa>
+
+<qa>
+<q>what is your age ?</q>
+<a>I am 18 .</a>
+</qa>
+
+<qa>
+<q>how old are you ?</q>
+<a>i am 18</a>
+</qa>
+
+<qa>
+<q>what is your name ?</q>
+<a>it's satin ?</a>
+</qa>
+
+<qa>
+<q>it's a beautiful name .</q>
+<a>thank you !</a>
+</qa>
+
+
+<qa>
+<q>it's a nice name .</q>
+<a>thank you !</a>
+</qa>
+
+
+<qa>
+<q>what is your <obj0> ?</q>
+<a>my <obj0> is <i.obj0> .</a>
+</qa>
+
 <qa>
 <q>what is <obj0> <obj1> ?</q>
 <a>my <obj1> is <obj0.obj1> .</a>
