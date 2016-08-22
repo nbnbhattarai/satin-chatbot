@@ -187,17 +187,17 @@ def get_contains(args_in):
         pass
     except UnboundLocalError:
         pass
-
-    if len(structure) > 0:
+    try:
+        if len(structure) > 0:
         # print('Structure',structure[0])
-        try:
+
             if structure[0] == 'is' or structure == 'are':
                 structure.append(structure[0])
                 structure.remove(structure[0])
-        except IndexError:
-            pass
-        except UnboundLocalError:
-            pass
+    except IndexError:
+        pass
+    except UnboundLocalError:
+        pass
 
     # print("Final Structure of sentence:", structure)
     # print("Object type",object_type)
@@ -215,8 +215,12 @@ def get_contains(args_in):
     contains.extend(pronouns)
     # contains.extend(verbs)
     contains.extend(adjective)
-
-    contains.extend(structure)
+    try:
+        contains.extend(structure)
+    except IndexError:
+        pass
+    except UnboundLocalError:
+        pass
     # print('contains:', contains)
     return list(set(contains))
 
