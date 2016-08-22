@@ -46,7 +46,7 @@ greetings = ['hi', 'hello', 'hey']
 queue = []
 object_type = []
 structure = []
-max_length_queue = 3
+max_length_queue = 6
 
 
 def isrepeated(text, just_repeated):
@@ -152,34 +152,41 @@ def get_contains(args_in):
 
     except IndexError:
         pass
+    except UnboundLocalError:
+        pass
 
     # print("Structure", structure)
-    for i, k in enumerate(structure):
-        if k.lower() == 'you':
-            structure[i] = 'I'
-            if structure[0] == 'are':
-                structure[0] = 'am'
-                # structure[0],structure[i] = structure[i],structure[0]
-            elif structure[0] == 'were':
-                structure[0] = 'was'
-                # structure[0],structure[i] = structure[i],structure[0]
-            structure[0], structure[i] = structure[i], structure[0]
-        elif k.lower() == 'your':
-            structure[i] = 'My'
-            structure.append(structure[0])
-            structure.remove(structure[0])
-        elif k.lower() == 'my':
-            structure[i] = 'Your'
-            structure.append(structure[0])
-            structure.remove(structure[0])
-        elif k.lower() == 'i':
-            structure[i] = 'You'
-            if structure[0] == 'am':
-                structure[0] = 'are'
+    try:
+        for i, k in enumerate(structure):
+            if k.lower() == 'you':
+                structure[i] = 'I'
+                if structure[0] == 'are':
+                    structure[0] = 'am'
+                    # structure[0],structure[i] = structure[i],structure[0]
+                elif structure[0] == 'were':
+                    structure[0] = 'was'
+                    # structure[0],structure[i] = structure[i],structure[0]
                 structure[0], structure[i] = structure[i], structure[0]
-            structure[0], structure[i] = structure[i], structure[0]
+            elif k.lower() == 'your':
+                structure[i] = 'My'
+                structure.append(structure[0])
+                structure.remove(structure[0])
+            elif k.lower() == 'my':
+                structure[i] = 'Your'
+                structure.append(structure[0])
+                structure.remove(structure[0])
+            elif k.lower() == 'i':
+                structure[i] = 'You'
+                if structure[0] == 'am':
+                    structure[0] = 'are'
+                    structure[0], structure[i] = structure[i], structure[0]
+                structure[0], structure[i] = structure[i], structure[0]
         # elif k.lower() == 'it':
         #    pass
+    except IndexError:
+        pass
+    except UnboundLocalError:
+        pass
 
     if len(structure) > 0:
         # print('Structure',structure[0])
@@ -188,6 +195,8 @@ def get_contains(args_in):
                 structure.append(structure[0])
                 structure.remove(structure[0])
         except IndexError:
+            pass
+        except UnboundLocalError:
             pass
 
     # print("Final Structure of sentence:", structure)
@@ -207,7 +216,7 @@ def get_contains(args_in):
     # contains.extend(verbs)
     contains.extend(adjective)
 
-    contains = structure
+    contains.extend(structure)
     # print('contains:', contains)
     return list(set(contains))
 
